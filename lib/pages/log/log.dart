@@ -19,7 +19,6 @@ class _LogPageState extends State<LogPage> {
         foregroundColor: AppColor.white,
       ),
       body: Container(
-
         height: double.infinity,
         width: double.infinity,
         color: AppColor.white,

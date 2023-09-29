@@ -58,9 +58,7 @@ class _NavTabState extends State<NavTab> {
                 color: AppColor.primaryColor,
               ),
               child: Column(
-                children: [
-
-                ],
+                children: [],
               ),
             ),
           ],
@@ -70,14 +68,14 @@ class _NavTabState extends State<NavTab> {
       bottomNavigationBar: CurvedNavigationBar(
         index: 1,
         height: 60.0,
-        items: const [
-          Icon(Icons.call, color: Colors.white),
-          Icon(Icons.home, color: Colors.white),
-          Icon(Icons.featured_play_list_rounded, color: Colors.white),
-          Icon(Icons.chat, color: Colors.white),
+        items: [
+          Icon(Icons.call, color: AppColor.primaryColor),
+          Icon(Icons.home, color: AppColor.primaryColor),
+          Icon(Icons.featured_play_list_rounded, color: AppColor.primaryColor),
+          Icon(Icons.chat, color: AppColor.primaryColor),
         ],
-        color: AppColor.primaryColor,
-        backgroundColor: Colors.white,
+        color: AppColor.white,
+        backgroundColor: AppColor.primaryColor,
         onTap: _onItemTapped,
       ),
     );
