@@ -1,9 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:nwss/constants/app_colors.dart';
 import 'package:nwss/navigator.dart';
-import 'package:nwss/pages/analytics/alalytics.dart';
-import 'package:nwss/pages/home.dart';
 
 import 'constants/app_theme.dart';
 Future<void> main() async {

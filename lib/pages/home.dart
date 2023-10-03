@@ -8,6 +8,7 @@ import 'package:lottie/lottie.dart';
 import 'package:nwss/constants/app_colors.dart';
 import 'package:nwss/pages/analytics/alalytics.dart';
 import 'package:nwss/pages/log/log.dart';
+import 'package:nwss/pages/price_rate/price_rate.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});
@@ -41,7 +42,7 @@ class _HomePageState extends State<HomePage> {
                   height: 150,
                   decoration: BoxDecoration(
                     color: AppColor.primaryColorLight,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(
                     children: [
@@ -239,7 +240,7 @@ class _HomePageState extends State<HomePage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                LogPage(), // Replace with the appropriate widget for your new screen
+                                PriceRate(), // Replace with the appropriate widget for your new screen
                           ),
                         );
                       },
