@@ -1,8 +1,10 @@
+// ignore_for_file: prefer_final_fields, prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:nwss/constants/app_colors.dart';
 import 'package:nwss/pages/home.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class NavTab extends StatefulWidget {
   const NavTab({super.key});
@@ -31,11 +33,8 @@ class _NavTabState extends State<NavTab> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
-          "NWSS",
-          style: GoogleFonts.ptSans(
-              fontWeight: FontWeight.bold, color: AppColor.white),
-        ),
+        title:
+          "NWSS".text.bold.center.make(),
         actions: [
           Container(
             padding: const EdgeInsets.only(right: 20),

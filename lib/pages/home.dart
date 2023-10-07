@@ -1,14 +1,16 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:nwss/await/loading.dart';
 import 'package:nwss/constants/app_colors.dart';
 import 'package:nwss/pages/analytics/alalytics.dart';
 import 'package:nwss/pages/log/log.dart';
 import 'package:nwss/pages/price_rate/price_rate.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});
@@ -27,15 +29,21 @@ class _HomePageState extends State<HomePage> {
         onRefresh: () async {
           (Duration(milliseconds: 1500));
         },
-        child: Container(
+        child: StreamBuilder(stream: FirebaseFirestore.instance.collection('user').doc('earllontes@gmail.com').snapshots(), 
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) { 
+         if (snapshot.hasError) {
+        return LoadingScreen();
+         } else if(snapshot.connectionState == ConnectionState.waiting){
+         return LoadingScreen();
+         } else {
+           return Container(
           padding: EdgeInsets.only(left: 15, right: 15),
           color: AppColor.primaryColor,
           height: double.infinity,
           width: double.infinity,
           child: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
-            child: Column(
-              children: [
+            child:  VStack([
                 SizedBox(height: 5),
                 Container(
                   padding: EdgeInsets.all(10),
@@ -50,7 +58,8 @@ class _HomePageState extends State<HomePage> {
                         padding: EdgeInsets.only(right: 20),
                         height: 150,
                         width: 140,
-                        child: PieChart(
+                        child: 
+                        PieChart(
                           PieChartData(
                             centerSpaceColor: AppColor.primaryColorLight,
                             startDegreeOffset: 0,
@@ -93,7 +102,7 @@ class _HomePageState extends State<HomePage> {
                                 value: 21,
                                 radius: 25,
                                 color: Colors.green[300],
-                                title: 'PHP 110.00',
+                                title: 'PHP ${snapshot.data['balance_to_pay']}',
                                 showTitle: true,
                               ),
                               // Add more sections as needed
@@ -120,10 +129,10 @@ class _HomePageState extends State<HomePage> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Lottie.asset("assets/green_dots.json", height: 30, width: 30),
+                                  Lottie.asset("assets/lottie/green_dots.json", height: 30, width: 30),
 
                                   Text(
-                                    "110.00",
+                                    "${snapshot.data['balance_to_pay']}.00",
                                     style: GoogleFonts.sourceCodePro(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600,
@@ -311,14 +320,19 @@ class _HomePageState extends State<HomePage> {
                         ),
                         child: Row(
                           children: [],
-                        )),
+                        ),),
                     SizedBox(height: 20),
                   ],
                 ),
-              ],
-            ),
+            ]),
+           
           ),
+        );
+         }
+        
+         },
         ),
+       
       ),
     );
   }

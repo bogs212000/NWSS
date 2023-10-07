@@ -1,3 +1,6 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nwss/constants/app_colors.dart';
@@ -45,6 +48,10 @@ class _PriceRateState extends State<PriceRate> {
                     style: GoogleFonts.nunitoSans(
                         fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
+                  StreamBuilder(stream: FirebaseFirestore.instance.collection('price').snapshots(), builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                    return ListView();
+                  })
                 ],
               ),
             ),
