@@ -32,22 +32,46 @@ class _NavTabState extends State<NavTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title:
-          "NWSS".text.bold.center.make(),
+        leading: Builder(builder: (BuildContext context) {
+          return GestureDetector(
+            onTap: () {
+              Scaffold.of(context).openDrawer();
+            },
+            child: Container(
+              padding: const EdgeInsets.only(left: 10),
+              child: Image.asset(
+                "assets/logo.png",
+                scale: 2.5,
+              ),
+            ),
+          );
+        }),
+        title: Column(
+          children: [
+            Row(
+              children: [
+                Text("Narra Palawan"),
+              ],
+            ),
+            Row(
+              children: [
+                Text("Narra Water Supply System", style: TextStyle(fontSize: 10),),
+              ],
+            ),
+          ],
+        ),
         actions: [
           Container(
-            padding: const EdgeInsets.only(right: 20),
-            child: const Icon(
-              Icons.settings,
-              size: 30,
-              color: Colors.amber,
+            padding: const EdgeInsets.only(right: 10),
+            child: Image.asset(
+              "assets/icons8-user-96.png",
+              scale: 2.5,
             ),
           ),
         ],
         elevation: 0,
         backgroundColor: AppColor.primaryColor,
-        foregroundColor: Colors.amber,
+        foregroundColor: Colors.white,
       ),
       drawer: Drawer(
         child: ListView(

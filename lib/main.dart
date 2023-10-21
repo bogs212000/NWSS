@@ -3,6 +3,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:nwss/navigator.dart';
+import 'package:nwss/pages/auth/auth.wrapper.dart';
+import 'package:nwss/pages/auth/login.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +23,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'NWSS App',
       theme: ThemeData.light(),
-      home: NavTab(),
+      home: AuthWrapper(),
     );
   }
 }
