@@ -1,6 +1,8 @@
-// ignore_for_file: prefer_final_fields, prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_final_fields, prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_import
 
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:ff_navigation_bar_plus/ff_navigation_bar_item.dart';
+import 'package:ff_navigation_bar_plus/ff_navigation_bar_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:nwss/constants/app_colors.dart';
 import 'package:nwss/pages/home.dart';
@@ -31,75 +33,59 @@ class _NavTabState extends State<NavTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: Builder(builder: (BuildContext context) {
-          return GestureDetector(
-            onTap: () {
-              Scaffold.of(context).openDrawer();
-            },
-            child: Container(
-              padding: const EdgeInsets.only(left: 10),
-              child: Image.asset(
-                "assets/logo.png",
-                scale: 2.5,
-              ),
-            ),
-          );
-        }),
-        title: Column(
-          children: [
-            Row(
-              children: [
-                Text("Narra Palawan"),
-              ],
-            ),
-            Row(
-              children: [
-                Text("Narra Water Supply System", style: TextStyle(fontSize: 10),),
-              ],
-            ),
-          ],
-        ),
-        actions: [
-          Container(
-            padding: const EdgeInsets.only(right: 10),
-            child: Image.asset(
-              "assets/icons8-user-96.png",
-              scale: 2.5,
-            ),
-          ),
-        ],
-        elevation: 0,
-        backgroundColor: AppColor.primaryColor,
-        foregroundColor: Colors.white,
-      ),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: AppColor.primaryColor,
-              ),
-              child: Column(
-                children: [],
-              ),
-            ),
-          ],
-        ),
-      ),
+      // appBar: AppBar(
+      //   actions: [
+      //     Container(
+      //       padding: const EdgeInsets.only(right: 10),
+      //       child: Image.asset(
+      //         "assets/icons8-user-96.png",
+      //         scale: 3,
+      //       ),
+      //     ),
+      //   ],
+      //   elevation: 0,
+      //   backgroundColor: AppColor.primaryColor,
+      //   foregroundColor: Colors.white,
+      // ),
+      // drawer: Drawer(
+      //   child: ListView(
+      //     children: [
+      //       DrawerHeader(
+      //         decoration: BoxDecoration(
+      //           color: AppColor.primaryColor,
+      //         ),
+      //         child: Column(
+      //           children: [],
+      //         ),
+      //       ),
+      //     ],
+      //   ),
+      // ),
       body: _myPages[_selectedIndex],
-      bottomNavigationBar: CurvedNavigationBar(
-        index: 1,
-        height: 60.0,
+      bottomNavigationBar: FFNavigationBar(
+        theme: FFNavigationBarTheme(
+          barBackgroundColor: Colors.white,
+          selectedItemBorderColor: Colors.white,
+          selectedItemBackgroundColor: AppColor.primaryColor,
+          selectedItemIconColor: Colors.white,
+          selectedItemLabelColor: Colors.black,
+        ),
         items: [
-          Icon(Icons.call, color: AppColor.primaryColor),
-          Icon(Icons.home, color: AppColor.primaryColor),
-          Icon(Icons.featured_play_list_rounded, color: AppColor.primaryColor),
-          Icon(Icons.chat, color: AppColor.primaryColor),
+
+          FFNavigationBarItem(
+              iconData: Icons.chat_outlined, label: 'Message'),
+          FFNavigationBarItem(iconData: Icons.home_outlined, label: 'Home'),
+
+          FFNavigationBarItem(
+              iconData: Icons.supervised_user_circle_outlined, label: 'Profile'),
         ],
-        color: AppColor.white,
-        backgroundColor: AppColor.primaryColor,
-        onTap: _onItemTapped,
+        selectedIndex: _selectedIndex,
+        onSelectTab: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          }
+
       ),
     );
   }

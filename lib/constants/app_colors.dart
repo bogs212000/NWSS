@@ -1,8 +1,10 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 
 class AppColor{
-  static Color primaryColor = const Color.fromARGB(255, 84, 118, 248);
-  static Color primaryColorLight = const Color.fromARGB(255, 195, 208, 255);
+  static Color primaryColor = Color(0xFF7EA1FF);
+  static Color primaryColorLight = Color(0xFFCADBFF);
   static Color white = Colors.white;
   static Color black = Colors.black;
 }

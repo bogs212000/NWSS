@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:nwss/constants/app_colors.dart';
 
 class PriceRate extends StatefulWidget {
@@ -46,14 +47,45 @@ class _PriceRateState extends State<PriceRate> {
                   Text(
                     "Price rate",
                     style: GoogleFonts.nunitoSans(
-                        fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
-                  StreamBuilder(stream: FirebaseFirestore.instance.collection('price').snapshots(), builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                    return ListView();
-                  })
                 ],
               ),
+            ),
+            Row(
+              children: [
+                Lottie.asset('assets/lottie/animation_lo0waq85.json',
+                    width: 150, height: 150, repeat: false),
+
+                VerticalDivider(
+                  color: Colors.black,
+                  thickness: 2,
+                ),
+
+                Expanded(
+                    child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          "Current Price",
+                          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "200",
+                          style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: AppColor.primaryColor),
+                        ),
+                      ],
+                    ),
+                  ],
+                ))
+              ],
             ),
           ],
         ),

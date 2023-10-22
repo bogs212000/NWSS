@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:nwss/constants/app_colors.dart';
 
@@ -111,11 +113,6 @@ class _LoginPageState extends State<LoginPage> {
                                 password: passwordController.text.trim().toString(),
                               );
                             },
-                            child: Text(
-                              "Sign in",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18),
-                            ),
                             style: ElevatedButton.styleFrom(
                               onPrimary: Colors.white,
                               primary: AppColor.primaryColor,
@@ -123,6 +120,11 @@ class _LoginPageState extends State<LoginPage> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
                               ),
+                            ),
+                            child: Text(
+                              "Sign in",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18),
                             ),
                           ),
                         ),
