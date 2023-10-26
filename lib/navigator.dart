@@ -1,11 +1,11 @@
 // ignore_for_file: prefer_final_fields, prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_import
 
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:ff_navigation_bar_plus/ff_navigation_bar_item.dart';
 import 'package:ff_navigation_bar_plus/ff_navigation_bar_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:nwss/constants/app_colors.dart';
 import 'package:nwss/pages/home.dart';
+import 'package:nwss/pages/profile/profile_page.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class NavTab extends StatefulWidget {
@@ -19,16 +19,11 @@ class _NavTabState extends State<NavTab> {
   static List<Widget> _myPages = <Widget>[
     HomePage(),
     HomePage(),
-    HomePage(),
-    HomePage()
+    ProfilePage(),
+
   ];
   int _selectedIndex = 1;
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
 import 'package:nwss/constants/app_colors.dart';
@@ -13,27 +13,46 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController emailController = new TextEditingController();
-  final TextEditingController passwordController = new TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColor.primaryColor,
-        elevation: 0,
-      ),
-      body: SafeArea(
+      body: Center(
         child: Container(
           padding: EdgeInsets.all(20),
-          color: AppColor.primaryColor,
+          color: Colors.white,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Row(
+                children: [
+                  SizedBox(
+                    width: 15,
+                  ),
+                  Text(
+                    "Log in",
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  SizedBox(
+                    width: 15,
+                  ),
+                  Text("Welcome back to NWSS app.",
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.w300)),
+                ],
+              ),
               Container(
-                padding: EdgeInsets.all(20),
+                padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20)),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
                 child: Column(
                   children: [
                     SizedBox(
@@ -56,8 +75,9 @@ class _LoginPageState extends State<LoginPage> {
                             color: Color.fromARGB(255, 121, 121, 121),
                           ),
                           enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(20),),
+                            borderSide: BorderSide(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                           labelText: "Email",
                           prefixIcon:
                               Icon(Icons.email_outlined, color: Colors.grey),
@@ -69,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                       height: 50,
                       child: TextField(
                         controller: passwordController,
-                        keyboardType: TextInputType.emailAddress,
+                        keyboardType: TextInputType.visiblePassword,
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 16,
@@ -85,14 +105,15 @@ class _LoginPageState extends State<LoginPage> {
                             color: Color.fromARGB(255, 121, 121, 121),
                           ),
                           enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(20.0)),
+                            borderSide: BorderSide(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
                           labelText: "Password",
                           prefixIcon: Icon(Icons.lock, color: Colors.grey),
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 10),
                     Row(
                       children: [
                         TextButton(
@@ -107,10 +128,10 @@ class _LoginPageState extends State<LoginPage> {
                           height: 40,
                           child: ElevatedButton(
                             onPressed: () async {
-                              await fbAuth
-                                  .signInWithEmailAndPassword(
+                              await fbAuth.signInWithEmailAndPassword(
                                 email: emailController.text.trim().toString(),
-                                password: passwordController.text.trim().toString(),
+                                password:
+                                    passwordController.text.trim().toString(),
                               );
                             },
                             style: ElevatedButton.styleFrom(
@@ -122,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                             child: Text(
-                              "Sign in",
+                              "Log in",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 18),
                             ),
@@ -139,15 +160,15 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(width: 40),
                   Text(
                     "Don't have an Account?",
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.w300),
                   ),
                   TextButton(
                     onPressed: () async {},
                     child: Text(
                       "Sign Up",
                       style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
+                          color: AppColor.primaryColor,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],

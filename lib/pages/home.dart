@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
@@ -9,9 +8,12 @@ import 'package:nwss/await/loading.dart';
 import 'package:nwss/constants/app_colors.dart';
 import 'package:nwss/constants/const.dart';
 import 'package:nwss/pages/analytics/alalytics.dart';
+import 'package:nwss/pages/analytics/fetch_chart_data.dart';
 import 'package:nwss/pages/log/log.dart';
 import 'package:nwss/pages/price_rate/price_rate.dart';
 import 'package:velocity_x/velocity_x.dart';
+
+int newsUpdate = 400;
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});
@@ -21,6 +23,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    fetchChartData(setState);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,8 +77,12 @@ class _HomePageState extends State<HomePage> {
                           gradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
-                            colors: [Colors.blue.shade500, Colors.green.shade300], // Define your gradient colors here
-                          ),                          borderRadius: BorderRadius.circular(10)),
+                            colors: [
+                              Colors.blue.shade500,
+                              Colors.green.shade300
+                            ], // Define your gradient colors here
+                          ),
+                          borderRadius: BorderRadius.circular(10)),
                       child: Column(
                         children: [
                           Row(
@@ -83,6 +95,13 @@ class _HomePageState extends State<HomePage> {
                                     fontWeight: FontWeight.w100,
                                     color: Colors.white),
                               ),
+                              Spacer(),
+                              Icon(
+                                Icons.notifications,
+                                size: 30,
+                                color: Colors.white,
+                              ),
+                              SizedBox(width: 20),
                             ],
                           ),
                           Padding(
@@ -121,7 +140,6 @@ class _HomePageState extends State<HomePage> {
                                             fontWeight: FontWeight.bold,
                                             color: AppColor.black),
                                       ),
-
                                       Spacer(),
                                       SizedBox(
                                         height: 25,
@@ -234,7 +252,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             onTap: () {
                               Navigator.of(context).push(_toTransaction());
-                              ;
+
                             },
                           ),
                           SizedBox(width: 20),
@@ -283,7 +301,7 @@ class _HomePageState extends State<HomePage> {
                       child: Divider(),
                     ),
                     SizedBox(
-                      height: 500,
+                      height: 300,
                       child: StreamBuilder(
                         stream: FirebaseFirestore.instance
                             .collection("NewsUpdate")
@@ -332,13 +350,17 @@ class _HomePageState extends State<HomePage> {
                             )
                           ]);
                           return ListView(
+                            physics: snapshot.data!.size >= 4
+                                ? NeverScrollableScrollPhysics()
+                                : BouncingScrollPhysics(),
                             padding: EdgeInsets.only(top: 0),
                             children: snapshot.data!.docs
                                 .map((DocumentSnapshot document) {
                               Map<String, dynamic> data =
                                   document.data()! as Map<String, dynamic>;
                               return Padding(
-                                padding: const EdgeInsets.all(5.0),
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, bottom: 10),
                                 child: Card(
                                   shadowColor: Color.fromARGB(255, 34, 34, 34),
                                   shape: RoundedRectangleBorder(
@@ -349,17 +371,13 @@ class _HomePageState extends State<HomePage> {
                                     padding: EdgeInsets.all(10),
                                     width: double.infinity,
                                     decoration: BoxDecoration(
-                                        color: Color(0xC2CADBFF),
+                                        color: AppColor.primaryColorLight,
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                     child: Column(
                                       children: [
                                         Row(
                                           children: [
-                                            Image.asset(
-                                              'assets/logo.png',
-                                              scale: 10,
-                                            ),
                                             Text(
                                               'Narra Water Supply System',
                                               maxLines: 1,

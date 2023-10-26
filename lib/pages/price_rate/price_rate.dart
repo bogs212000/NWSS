@@ -1,6 +1,5 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
@@ -17,11 +16,6 @@ class _PriceRateState extends State<PriceRate> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: AppColor.primaryColor,
-        foregroundColor: AppColor.white,
-      ),
       body: Container(
         height: double.infinity,
         width: double.infinity,
@@ -29,27 +23,60 @@ class _PriceRateState extends State<PriceRate> {
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.only(left: 15, bottom: 15),
-              color: AppColor.primaryColor,
+              padding: const EdgeInsets.only(left: 15, bottom: 15),
               width: double.infinity,
-              child: Row(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.blue.shade500,
+                    Colors.green.shade300
+                  ], // Define your gradient colors here
+                ),
+              ),
+              child: Column(
                 children: [
-                  Container(
-                    height: 50,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      color: AppColor.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Image.asset("assets/water_drop.png", scale: 3),
+                  SizedBox(height: 40),
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Icon(
+                          Icons.arrow_back_ios_new,
+                          size: 30,
+                          color: Colors.white,
+                        ),
+                      )
+                    ],
                   ),
-                  SizedBox(width: 10),
-                  Text(
-                    "Price rate",
-                    style: GoogleFonts.nunitoSans(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          color: AppColor.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Image.asset("assets/water_drop.png",
+                            scale: 3),
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        "Price Rate",
+                        style: GoogleFonts.nunitoSans(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

@@ -51,6 +51,7 @@ dependencies:
   firebase_storage: ^11.0.6
   firebase_auth: ^4.0.0
   ff_navigation_bar_plus: ^0.1.5
+  webview_flutter: ^2.8.0
 
 dev_dependencies:
   flutter_test:

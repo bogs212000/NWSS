@@ -27,6 +27,7 @@ class Wrapper extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Lottie.asset('assets/lottie/loading.json', height: 50),
+                SizedBox(width: 5),
                 const Text(
                   "Loading please wait...",
                   style: TextStyle(
