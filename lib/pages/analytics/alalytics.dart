@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, unnecessary_const
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mrx_charts/mrx_charts.dart';
@@ -17,18 +18,18 @@ class AnalyticsPage extends StatefulWidget {
 
 class _AnalyticsPageState extends State<AnalyticsPage> {
   late List<ChartBarDataItem> customChartData = [
-    ChartBarDataItem(color: const Color(0xFF8043F9), value: jan, x: 1.0),
-    ChartBarDataItem(color: const Color(0xFF8043F9), value: feb, x: 2.0),
-    ChartBarDataItem(color: const Color(0xFF8043F9), value: mar, x: 3.0),
-    ChartBarDataItem(color: const Color(0xFF8043F9), value: apr, x: 4.0),
-    ChartBarDataItem(color: const Color(0xFF8043F9), value: ma, x: 5.0),
-    ChartBarDataItem(color: const Color(0xFF8043F9), value: jun, x: 6.0),
-    ChartBarDataItem(color: const Color(0xFF8043F9), value: jul, x: 7.0),
-    ChartBarDataItem(color: const Color(0xFF8043F9), value: aug, x: 8.0),
-    ChartBarDataItem(color: const Color(0xFF8043F9), value: sep, x: 9.0),
-    ChartBarDataItem(color: const Color(0xFF8043F9), value: oct, x: 10.0),
-    ChartBarDataItem(color: const Color(0xFF8043F9), value: nov, x: 11.0),
-    ChartBarDataItem(color: const Color(0xFF8043F9), value: dec, x: 12.0),
+    ChartBarDataItem(color: const Color(0xFF2196F3), value: jan, x: 1.0),
+    ChartBarDataItem(color: const Color(0xFF2196F3), value: feb, x: 2.0),
+    ChartBarDataItem(color: const Color(0xFF2196F3), value: mar, x: 3.0),
+    ChartBarDataItem(color: const Color(0xFF2196F3), value: apr, x: 4.0),
+    ChartBarDataItem(color: const Color(0xFF2196F3), value: ma, x: 5.0),
+    ChartBarDataItem(color: const Color(0xFF2196F3), value: jun, x: 6.0),
+    ChartBarDataItem(color: const Color(0xFF2196F3), value: jul, x: 7.0),
+    ChartBarDataItem(color: const Color(0xFF2196F3), value: aug, x: 8.0),
+    ChartBarDataItem(color: const Color(0xFF2196F3), value: sep, x: 9.0),
+    ChartBarDataItem(color: const Color(0xFF2196F3), value: oct, x: 10.0),
+    ChartBarDataItem(color: const Color(0xFF2196F3), value: nov, x: 11.0),
+    ChartBarDataItem(color: const Color(0xFF2196F3), value: dec, x: 12.0),
   ];
   bool isLoading = false;
 
@@ -39,29 +40,17 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
 
   @override
   Widget build(BuildContext context) {
+    Brightness brightness = MediaQuery.of(context).platformBrightness;
     return Scaffold(
       body: isLoading
           ? Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Lottie.asset('assets/lottie/loading.json', height: 50),
-                  SizedBox(width: 5),
-                  const Text(
-                    "Loading please wait...",
-                    style: TextStyle(
-                        fontSize: 12.0,
-                        color: Colors.blueGrey,
-                        letterSpacing: 1.0,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            )
+        child: Lottie.asset('assets/lottie/animation_loading.json',
+            width: 100, height: 100),
+      )
           : Container(
               height: double.infinity,
               width: double.infinity,
-              color: AppColor.white,
+
               child: Column(
                 children: [
                   Container(
@@ -72,8 +61,12 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          Colors.blue.shade500,
-                          Colors.green.shade300
+                          brightness == Brightness.light
+                              ? Colors.blue.shade500
+                              : Colors.blue.shade900,
+                          brightness == Brightness.light
+                              ? Colors.green.shade300
+                              : Colors.green.shade800,
                         ], // Define your gradient colors here
                       ),
                     ),
@@ -128,7 +121,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                     child: Row(
                       children: [
                         CircleAvatar(
-                          backgroundColor: Color(0xFF8043F9),
+                          backgroundColor: Color(0xFF2196F3),
                           radius: 5,
                         ),
                         const SizedBox(width: 5),
@@ -151,7 +144,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                               max: 12.0,
                               min: 1.0,
                               textStyle: TextStyle(
-                                color: Colors.black,
+
                                 fontSize: 10.0,
                               ),
                             ),
@@ -160,7 +153,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                               max: 500.0,
                               min: 0.0,
                               textStyle: TextStyle(
-                                color: Colors.black,
+
                                 fontSize: 10.0,
                               ),
                             ),
@@ -178,7 +171,9 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                           ),
                         ),
                       ],
-                    ),
+                    ).animate()
+                        .fadeIn()
+                        .move(delay: 300.ms, duration: 600.ms),
                   ),
                 ],
               ),

@@ -11,7 +11,9 @@ class LoadingScreen extends StatefulWidget {
 class _LoadingScreenState extends State<LoadingScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container(color: Colors.white, height: double.infinity, width: double.infinity, 
-    child: Center(child: Lottie.asset('assets/lottie/loading.json'),),);
+    return Center(
+      child: Lottie.asset('assets/lottie/animation_loading.json',
+          width: 100, height: 100),
+    );
   }
 }

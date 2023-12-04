@@ -23,39 +23,13 @@ class Wrapper extends StatelessWidget {
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> userData) {
         if (!userData.hasData) {
           return Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Lottie.asset('assets/lottie/loading.json', height: 50),
-                SizedBox(width: 5),
-                const Text(
-                  "Loading please wait...",
-                  style: TextStyle(
-                      fontSize: 12.0,
-                      color: Colors.blueGrey,
-                      letterSpacing: 1.0,
-                      fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
+            child: Lottie.asset('assets/lottie/animation_loading.json',
+                width: 100, height: 100),
           );
         } else if (userData.connectionState == ConnectionState.waiting) {
           return Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Lottie.asset('assets/lottie/loading.json', height: 50),
-                SizedBox(width: 5),
-                const Text(
-                  "Loading please wait...",
-                  style: TextStyle(
-                      fontSize: 12.0,
-                      color: Colors.blueGrey,
-                      letterSpacing: 1.0,
-                      fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
+            child: Lottie.asset('assets/lottie/animation_loading.json',
+                width: 100, height: 100),
           );
         } else if (userData.hasError) {
           return Row(

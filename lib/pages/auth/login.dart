@@ -18,11 +18,11 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    Brightness brightness = MediaQuery.of(context).platformBrightness;
     return Scaffold(
       body: Center(
         child: Container(
           padding: EdgeInsets.all(20),
-          color: Colors.white,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -50,7 +50,6 @@ class _LoginPageState extends State<LoginPage> {
               Container(
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Column(
@@ -61,18 +60,15 @@ class _LoginPageState extends State<LoginPage> {
                         controller: emailController,
                         keyboardType: TextInputType.emailAddress,
                         style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold),
                         decoration: InputDecoration(
                           filled: true,
-                          fillColor: Colors.white,
+                          fillColor: brightness == Brightness.light
+                              ? Colors.white
+                              : Colors.white.withOpacity(0.3),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                             borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          labelStyle: TextStyle(
-                            color: Color.fromARGB(255, 121, 121, 121),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey),
@@ -91,18 +87,15 @@ class _LoginPageState extends State<LoginPage> {
                         controller: passwordController,
                         keyboardType: TextInputType.visiblePassword,
                         style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold),
                         decoration: InputDecoration(
                           filled: true,
-                          fillColor: Colors.white,
+                          fillColor: brightness == Brightness.light
+                              ? Colors.white
+                              : Colors.white.withOpacity(0.3),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                             borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          labelStyle: TextStyle(
-                            color: Color.fromARGB(255, 121, 121, 121),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey),
@@ -125,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         Spacer(),
                         SizedBox(
-                          height: 40,
+                          height: 35,
                           child: ElevatedButton(
                             onPressed: () async {
                               await fbAuth.signInWithEmailAndPassword(

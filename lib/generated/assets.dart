@@ -5,7 +5,10 @@ class Assets {
   static const String assetsAnalyticsIcon = 'assets/analytics_icon.png';
   static const String assetsGcashIcon = 'assets/gcash_icon.png';
   static const String assetsIcons8CardPayment100 = 'assets/icons8-card-payment-100.png';
+  static const String assetsIcons8CustomerSupport90 = 'assets/icons8-customer-support-90.png';
   static const String assetsIcons8MenuVertical96 = 'assets/icons8-menu-vertical-96.png';
+  static const String assetsIcons8Night96 = 'assets/icons8-night-96.png';
+  static const String assetsIcons8PartlyCloudyDay96 = 'assets/icons8-partly-cloudy-day-96.png';
   static const String assetsIcons8Password64 = 'assets/icons8-password-64.png';
   static const String assetsIcons8Peso100 = 'assets/icons8-peso-100.png';
   static const String assetsIcons8PhoneNumber90 = 'assets/icons8-phone-number-90.png';
@@ -15,6 +18,7 @@ class Assets {
   static const String assetsLogo = 'assets/logo.png';
   static const String assetsWaterDrop = 'assets/water_drop.png';
   static const String lottieAnimationLo0waq85 = 'assets/lottie/animation_lo0waq85.json';
+  static const String lottieAnimationLoading = 'assets/lottie/animation_loading.json';
   static const String lottieGreenDots = 'assets/lottie/green_dots.json';
   static const String lottieLoading = 'assets/lottie/loading.json';
 

@@ -38,24 +38,27 @@ Future<void> fetchChartData(Function setState) async {
       double november = data['november'].toDouble();
       double december = data['december'].toDouble();
 
-      jan = january;
-      feb = february;
-      mar = march;
-      apr = april;
-      ma = may;
-      jun = june;
-      jul = july;
-      aug = august;
-      sep = september;
-      oct = october;
-      nov = november;
-      dec = december;
+       setState({
+      jan = january,
+      feb = february,
+      mar = march,
+      apr = april,
+      ma = may,
+      jun = june,
+      jul = july,
+      aug = august,
+      sep = september,
+      oct = october,
+      nov = november,
+      dec = december,
+    });
+
     } else {
       // Handle the case where the data doesn't exist
     }
   } catch (e) {
     // Handle errors
   } finally {
-    setState(jan, feb, mar, apr, ma, jun, jul, aug, sep, oct, nov, dec);
+   
   }
 }

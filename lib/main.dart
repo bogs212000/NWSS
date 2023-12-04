@@ -14,17 +14,25 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
+  static final ValueNotifier<ThemeMode> themeNotifier =
+      ValueNotifier(ThemeMode.light);   
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'NWSS App',
-      theme: ThemeData.light(),
-      home: AuthWrapper(),
-    );
+     return ValueListenableBuilder<ThemeMode>(
+        valueListenable: themeNotifier,
+        builder: (_, ThemeMode currentMode, __) {
+          return MaterialApp(
+            // Remove the debug banner
+            debugShowCheckedModeBanner: false,
+            title: 'NWSS',
+            theme: ThemeData(primarySwatch: Colors.blue, backgroundColor: Colors.green,),
+            darkTheme: ThemeData.dark(),
+            themeMode: ThemeMode.system,
+            home: const AuthWrapper(),
+          );
+        });
   }
 }
 

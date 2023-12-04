@@ -1,22 +1,22 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
 import 'package:nwss/constants/app_colors.dart';
 
-class PriceRate extends StatefulWidget {
-  const PriceRate({super.key});
+class SupportPage extends StatefulWidget {
+  const SupportPage({super.key});
 
   @override
-  State<PriceRate> createState() => _PriceRateState();
+  State<SupportPage> createState() => _SupportPageState();
 }
 
-class _PriceRateState extends State<PriceRate> {
+class _SupportPageState extends State<SupportPage> {
   @override
   Widget build(BuildContext context) {
     Brightness brightness = MediaQuery.of(context).platformBrightness;
     return Scaffold(
+
       body: Container(
         height: double.infinity,
         width: double.infinity,
@@ -69,11 +69,12 @@ class _PriceRateState extends State<PriceRate> {
                           color: AppColor.white,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Image.asset("assets/water_drop.png", scale: 3),
+                        child: Image.asset("assets/icons8-customer-support-90.png",
+                            scale: 3),
                       ),
                       const SizedBox(width: 10),
                       Text(
-                        "Price Rate",
+                        "Customer Support",
                         style: GoogleFonts.nunitoSans(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -84,41 +85,6 @@ class _PriceRateState extends State<PriceRate> {
                   ),
                 ],
               ),
-            ),
-            Row(
-              children: [
-                Lottie.asset('assets/lottie/animation_lo0waq85.json',
-                    width: 150, height: 150, repeat: false),
-                VerticalDivider(
-                  color: Colors.black,
-                  thickness: 2,
-                ),
-                Expanded(
-                    child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          "Current Price",
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "200",
-                          style: TextStyle(
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
-                              color: AppColor.primaryColor),
-                        ),
-                      ],
-                    ),
-                  ],
-                ))
-              ],
             ),
           ],
         ),

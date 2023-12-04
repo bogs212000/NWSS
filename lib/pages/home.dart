@@ -2,18 +2,25 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:nwss/await/fetch.dart';
 import 'package:nwss/await/loading.dart';
+import 'package:nwss/await/release.dart';
 import 'package:nwss/constants/app_colors.dart';
 import 'package:nwss/constants/const.dart';
+import 'package:nwss/main.dart';
 import 'package:nwss/pages/analytics/alalytics.dart';
 import 'package:nwss/pages/analytics/fetch_chart_data.dart';
 import 'package:nwss/pages/log/log.dart';
 import 'package:nwss/pages/price_rate/price_rate.dart';
+import 'package:nwss/pages/support/support.page.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 int newsUpdate = 400;
+String greeting = "";
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});
@@ -26,13 +33,29 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    fetchRelease(setState);
     fetchChartData(setState);
+    fetchUsersGuide(setState);
+    fetchTermsConditions(setState);
   }
 
   @override
   Widget build(BuildContext context) {
+    Brightness brightness = MediaQuery.of(context).platformBrightness;
+    String greeting = "";
+    int hours = now.hour;
+
+    if (hours >= 6 && hours <= 17) {
+      setState(() {
+        greeting = "Day";
+      });
+    } else if (hours >= 18 && hours <= 5) {
+      setState(() {
+        greeting = "Evening";
+      });
+    }
+
     return Scaffold(
-      backgroundColor: AppColor.white,
       body: RefreshIndicator(
         backgroundColor: AppColor.primaryColorLight,
         color: AppColor.primaryColor,
@@ -46,29 +69,14 @@ class _HomePageState extends State<HomePage> {
               return LoadingScreen();
             } else if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Lottie.asset('assets/lottie/loading.json', height: 50),
-                    SizedBox(width: 5),
-                    const Text(
-                      "Loading please wait...",
-                      style: TextStyle(
-                          fontSize: 12.0,
-                          color: Colors.blueGrey,
-                          letterSpacing: 1.0,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
+                child: Lottie.asset('assets/lottie/animation_loading.json',
+                    width: 100, height: 100),
               );
             } else {
               return Container(
-                color: Colors.white,
                 height: double.infinity,
                 width: double.infinity,
                 child: SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
                   child: VStack([
                     Container(
                       padding: EdgeInsets.only(top: 50, bottom: 20),
@@ -78,8 +86,12 @@ class _HomePageState extends State<HomePage> {
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              Colors.blue.shade500,
-                              Colors.green.shade300
+                              brightness == Brightness.light
+                                  ? Colors.blue.shade500
+                                  : Colors.blue.shade900,
+                              brightness == Brightness.light
+                                  ? Colors.green.shade300
+                                  : Colors.green.shade800,
                             ], // Define your gradient colors here
                           ),
                           borderRadius: BorderRadius.circular(10)),
@@ -88,14 +100,43 @@ class _HomePageState extends State<HomePage> {
                           Row(
                             children: [
                               SizedBox(width: 20),
-                              Text(
-                                "Hello!",
-                                style: TextStyle(
-                                    fontSize: 40,
-                                    fontWeight: FontWeight.w100,
-                                    color: Colors.white),
-                              ),
+                              hours >= 6 && hours <= 17
+                                  ? Row(
+                                      children: [
+                                        Image.asset(
+                                            'assets/icons8-partly-cloudy-day-96.png',
+                                            height: 30,
+                                            width: 30),
+                                        Text(
+                                          '  Hello, have a great Day!',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w100),
+                                        )
+                                      ],
+                                    )
+                                  : Row(
+                                      children: [
+                                        Image.asset(
+                                            'assets/icons8-night-96.png',
+                                            height: 30,
+                                            width: 30),
+                                        Text(
+                                          '  Hello, have a great Evening!',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w100),
+                                        )
+                                      ],
+                                    ),
                               Spacer(),
+                              IconButton(
+                                  icon: Icon(
+                                      brightness == Brightness.light
+                                          ? Icons.light_mode
+                                          : Icons.dark_mode,
+                                      color: Colors.white),
+                                  onPressed: () {}),
                               Icon(
                                 Icons.notifications,
                                 size: 30,
@@ -104,102 +145,96 @@ class _HomePageState extends State<HomePage> {
                               SizedBox(width: 20),
                             ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20, right: 20),
-                            child: Container(
-                              padding: EdgeInsets.all(15),
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "Bills to Pay",
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500,
-                                            color: AppColor.primaryColor),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Image.asset(
-                                        'assets/icons8-peso-100.png',
-                                        scale: 4,
-                                        color: AppColor.primaryColor,
-                                      ),
-                                      Text(
-                                        "${snapshot.data['balance_to_pay']}",
-                                        style: TextStyle(
-                                            fontSize: 40,
-                                            fontWeight: FontWeight.bold,
-                                            color: AppColor.black),
-                                      ),
-                                      Spacer(),
-                                      SizedBox(
-                                        height: 25,
-                                        child: ElevatedButton(
-                                          onPressed: () async {},
-                                          style: ElevatedButton.styleFrom(
-                                            onPrimary: Colors.white,
-                                            primary: AppColor.primaryColor,
-                                            onSurface: Colors.grey,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
+                          releaseMode == false
+                              ? Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20),
+                                  child: Container(
+                                    padding: EdgeInsets.all(15),
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: brightness == Brightness.light
+                                          ? Colors.white
+                                          : Colors.white.withOpacity(0.3),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Row(children: [
+                                          Text("Bills to Pay",
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: brightness ==
+                                                          Brightness.light
+                                                      ? AppColor.primaryColor
+                                                      : Colors.white))
+                                        ]),
+                                        Row(
+                                          children: [
+                                            Image.asset(
+                                              'assets/icons8-peso-100.png',
+                                              scale: 4,
+                                              color:
+                                                  brightness == Brightness.light
+                                                      ? AppColor.primaryColor
+                                                      : Colors.white,
                                             ),
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                "Pay",
+                                            Text(
+                                                "${snapshot.data['balance_to_pay']}",
                                                 style: TextStyle(
+                                                    fontSize: 40,
                                                     fontWeight: FontWeight.bold,
-                                                    fontSize: 10),
+                                                    color: brightness ==
+                                                            Brightness.light
+                                                        ? AppColor.primaryColor
+                                                        : Colors.white)),
+                                            Spacer(),
+                                            SizedBox(
+                                              height: 25,
+                                              child: ElevatedButton(
+                                                onPressed: () async {},
+                                                style: ElevatedButton.styleFrom(
+                                                  onPrimary: Colors.white,
+                                                  primary:
+                                                      AppColor.primaryColor,
+                                                  onSurface: Colors.grey,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                  ),
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      "Pay",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 10),
+                                                    ),
+                                                    SizedBox(width: 5),
+                                                    Image.asset(
+                                                        "assets/gcash_icon.png")
+                                                  ],
+                                                ),
                                               ),
-                                              SizedBox(width: 5),
-                                              Image.asset(
-                                                  "assets/gcash_icon.png")
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ],
-                              ),
-                            ),
-                          ),
+                                )
+                              : SizedBox()
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      children: [
-                        SizedBox(width: 20),
-                        Text(
-                          "Menu",
-                          style: GoogleFonts.nunitoSans(
-                              color: Colors.black,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w800),
-                        ),
-                      ],
-                    ),
+                    SizedBox(height: 20),
                     Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: Divider(),
-                    ),
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(top: 5, left: 20, bottom: 20),
+                      padding: const EdgeInsets.only(
+                          right: 0, top: 5, left: 20, bottom: 20),
                       child: Row(
                         children: [
                           GestureDetector(
@@ -209,25 +244,33 @@ class _HomePageState extends State<HomePage> {
                                   height: 50,
                                   width: 50,
                                   decoration: BoxDecoration(
-                                    color: AppColor.primaryColorLight,
+                                    color: brightness == Brightness.light
+                                        ? AppColor.primaryColorLight
+                                        : Colors.white.withOpacity(0.2),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Image.asset(
-                                      "assets/analytics_icon.png",
-                                      scale: 2.5),
+                                    "assets/analytics_icon.png",
+                                    scale: 2.5,
+                                    color: brightness == Brightness.light
+                                        ? AppColor.primaryColor
+                                        : Colors.white,
+                                  ),
                                 ),
                                 SizedBox(height: 5),
                                 Text(
                                   "Analytics",
-                                  style: TextStyle(
-                                      color: AppColor.black, fontSize: 12),
+                                  style: TextStyle(fontSize: 12),
                                 ),
                               ],
                             ),
                             onTap: () async {
                               Navigator.of(context).push(_toAnalytics());
                             },
-                          ),
+                          )
+                              .animate()
+                              .fadeIn()
+                              .move(delay: 100.ms, duration: 100.ms),
                           SizedBox(width: 20),
                           GestureDetector(
                             child: Column(
@@ -236,25 +279,33 @@ class _HomePageState extends State<HomePage> {
                                   height: 50,
                                   width: 50,
                                   decoration: BoxDecoration(
-                                    color: AppColor.primaryColorLight,
+                                    color: brightness == Brightness.light
+                                        ? AppColor.primaryColorLight
+                                        : Colors.white.withOpacity(0.2),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  child: Image.asset("assets/log_icon.png",
-                                      scale: 3.5),
+                                  child: Image.asset(
+                                    "assets/log_icon.png",
+                                    scale: 3.5,
+                                    color: brightness == Brightness.light
+                                        ? AppColor.primaryColor
+                                        : Colors.white,
+                                  ),
                                 ),
                                 SizedBox(height: 5),
                                 Text(
                                   "Transactions",
-                                  style: TextStyle(
-                                      color: AppColor.black, fontSize: 12),
+                                  style: TextStyle(fontSize: 12),
                                 )
                               ],
                             ),
                             onTap: () {
                               Navigator.of(context).push(_toTransaction());
-
                             },
-                          ),
+                          )
+                              .animate()
+                              .fadeIn()
+                              .move(delay: 100.ms, duration: 200.ms),
                           SizedBox(width: 20),
                           GestureDetector(
                             child: Column(
@@ -263,45 +314,89 @@ class _HomePageState extends State<HomePage> {
                                   height: 50,
                                   width: 50,
                                   decoration: BoxDecoration(
-                                    color: AppColor.primaryColorLight,
+                                    // ignore: unrelated_type_equality_checks
+                                    color: brightness == Brightness.light
+                                        ? AppColor.primaryColorLight
+                                        : Colors.white.withOpacity(0.2),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  child: Image.asset("assets/water_drop.png",
-                                      scale: 3),
+                                  child: Image.asset(
+                                    "assets/water_drop.png",
+                                    scale: 3,
+                                    color: brightness == Brightness.light
+                                        ? AppColor.primaryColor
+                                        : Colors.white,
+                                  ),
                                 ),
                                 SizedBox(height: 5),
                                 Text(
                                   "Price rate",
-                                  style: TextStyle(
-                                      color: AppColor.black, fontSize: 12),
+                                  style: TextStyle(fontSize: 12),
                                 )
                               ],
                             ),
                             onTap: () {
                               Navigator.of(context).push(_toPriceRate());
                             },
-                          ),
+                          )
+                              .animate()
+                              .fadeIn()
+                              .move(delay: 100.ms, duration: 300.ms),
+                          SizedBox(width: 30),
+                          GestureDetector(
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: 50,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                    // ignore: unrelated_type_equality_checks
+                                    color: brightness == Brightness.light
+                                        ? AppColor.primaryColorLight
+                                        : Colors.white.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Image.asset(
+                                    "assets/icons8-customer-support-90.png",
+                                    scale: 2.5,
+                                    color: brightness == Brightness.light
+                                        ? AppColor.primaryColor
+                                        : Colors.white,
+                                  ),
+                                ),
+                                SizedBox(height: 5),
+                                Text(
+                                  "Support",
+                                  style: TextStyle(fontSize: 12),
+                                )
+                              ],
+                            ),
+                            onTap: () {
+                              Navigator.of(context).push(_toSupportPage());
+                            },
+                          )
+                              .animate()
+                              .fadeIn()
+                              .move(delay: 100.ms, duration: 400.ms),
                         ],
                       ),
                     ),
                     Row(
                       children: [
-                        SizedBox(width: 20),
+                        SizedBox(width: 10),
                         Text(
                           "News & Updates",
                           style: GoogleFonts.nunitoSans(
-                              color: Colors.black,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w800),
+                              fontSize: 15, fontWeight: FontWeight.w800),
                         ),
                       ],
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      padding: const EdgeInsets.only(left: 5, right: 5),
                       child: Divider(),
                     ),
                     SizedBox(
-                      height: 300,
+                      height: releaseMode == true ? 500 : 400,
                       child: StreamBuilder(
                         stream: FirebaseFirestore.instance
                             .collection("NewsUpdate")
@@ -326,17 +421,9 @@ class _HomePageState extends State<HomePage> {
                           }
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  height: 100,
-                                  width: 100,
-                                  child: Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                )
-                              ],
+                            return Center(
+                              child: Lottie.asset('assets/lottie/animation_loading.json',
+                                  width: 100, height: 100),
                             );
                           }
                           if (snapshot.data?.size == 0) {
@@ -349,94 +436,116 @@ class _HomePageState extends State<HomePage> {
                               decoration: InputDecoration(),
                             )
                           ]);
-                          return ListView(
-                            physics: snapshot.data!.size >= 4
-                                ? NeverScrollableScrollPhysics()
-                                : BouncingScrollPhysics(),
-                            padding: EdgeInsets.only(top: 0),
-                            children: snapshot.data!.docs
-                                .map((DocumentSnapshot document) {
-                              Map<String, dynamic> data =
-                                  document.data()! as Map<String, dynamic>;
-                              return Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 20, right: 20, bottom: 10),
-                                child: Card(
-                                  shadowColor: Color.fromARGB(255, 34, 34, 34),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  color: AppColor.primaryColorLight,
-                                  child: Container(
-                                    padding: EdgeInsets.all(10),
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                        color: AppColor.primaryColorLight,
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              'Narra Water Supply System',
-                                              maxLines: 1,
-                                              softWrap: false,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                  fontSize: 11,
-                                                  fontWeight: FontWeight.w400),
+                          return AnimationLimiter(
+                            child: ListView(
+                              physics: snapshot.data!.size <= 4
+                                  ? NeverScrollableScrollPhysics()
+                                  : BouncingScrollPhysics(),
+                              padding: EdgeInsets.only(top: 0),
+                              children: snapshot.data!.docs
+                                  .map((DocumentSnapshot document) {
+                                Map<String, dynamic> data =
+                                    document.data()! as Map<String, dynamic>;
+                                return AnimationConfiguration.staggeredList(
+                                  position: snapshot.data!.size,
+                                  delay: Duration(milliseconds: 200),
+                                  child: SlideAnimation(
+                                    duration: Duration(milliseconds: 2500),
+                                    curve: Curves.fastLinearToSlowEaseIn,
+                                    child: FadeInAnimation(
+                                      curve: Curves.fastLinearToSlowEaseIn,
+                                      duration: Duration(milliseconds: 2500),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 5, right: 5, bottom: 10),
+                                        child: Card(
+                                          shadowColor:
+                                              Color.fromARGB(255, 34, 34, 34),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Container(
+                                            padding: EdgeInsets.all(10),
+                                            width: double.infinity,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            child: Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      'Narra Water Supply System',
+                                                      maxLines: 1,
+                                                      softWrap: false,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          fontSize: 11,
+                                                          fontWeight:
+                                                              FontWeight.w400),
+                                                    ),
+                                                    Spacer(),
+                                                    Text(
+                                                      data['date'],
+                                                      maxLines: 1,
+                                                      softWrap: false,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          fontSize: 10,
+                                                          fontWeight:
+                                                              FontWeight.w200),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Divider(),
+                                                Row(
+                                                  children: [
+                                                    Flexible(
+                                                      child: Text(
+                                                        data['title'],
+                                                        maxLines: 1,
+                                                        softWrap: false,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Flexible(
+                                                      child: Text(
+                                                        data['descriptions'],
+                                                        maxLines: 3,
+                                                        softWrap: false,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w200),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
                                             ),
-                                            Spacer(),
-                                            Text(
-                                              data['date'],
-                                              maxLines: 1,
-                                              softWrap: false,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                  fontSize: 10,
-                                                  fontWeight: FontWeight.w200),
-                                            ),
-                                          ],
+                                          ),
                                         ),
-                                        Divider(),
-                                        Row(
-                                          children: [
-                                            Flexible(
-                                              child: Text(
-                                                data['title'],
-                                                maxLines: 1,
-                                                softWrap: false,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Flexible(
-                                              child: Text(
-                                                data['details'],
-                                                maxLines: 3,
-                                                softWrap: false,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.w200),
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                      ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                            }).toList(),
+                                );
+                              }).toList(),
+                            ),
                           );
                         },
                       ),
@@ -507,6 +616,26 @@ class _HomePageState extends State<HomePage> {
                 .animate(animation),
             textDirection: TextDirection.rtl,
             child: PriceRate());
+      },
+    );
+  }
+
+  Route _toSupportPage() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, anotherAnimation) => SupportPage(),
+      transitionDuration: Duration(milliseconds: 1000),
+      reverseTransitionDuration: Duration(milliseconds: 200),
+      transitionsBuilder: (context, animation, anotherAnimation, child) {
+        animation = CurvedAnimation(
+            parent: animation,
+            reverseCurve: Curves.fastOutSlowIn,
+            curve: Curves.fastLinearToSlowEaseIn);
+
+        return SlideTransition(
+            position: Tween(begin: Offset(0.0, 1.0), end: Offset(0.0, 0.0))
+                .animate(animation),
+            textDirection: TextDirection.rtl,
+            child: SupportPage());
       },
     );
   }

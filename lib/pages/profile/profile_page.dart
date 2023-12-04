@@ -5,7 +5,7 @@ import 'package:lottie/lottie.dart';
 import 'package:nwss/await/loading.dart';
 import 'package:nwss/constants/app_colors.dart';
 import 'package:nwss/constants/const.dart';
-import 'package:nwss/pages/profile/show_dialog.dart';
+import 'package:avatars/avatars.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -19,8 +19,9 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
+    Brightness brightness = MediaQuery.of(context).platformBrightness;
     return Scaffold(
-      backgroundColor: AppColor.white,
+      
       body: RefreshIndicator(
         backgroundColor: AppColor.primaryColorLight,
         color: AppColor.primaryColor,
@@ -34,25 +35,12 @@ class _ProfilePageState extends State<ProfilePage> {
               return LoadingScreen();
             } else if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Lottie.asset('assets/lottie/loading.json', height: 50),
-                    SizedBox(width: 5),
-                    const Text(
-                      "Loading please wait...",
-                      style: TextStyle(
-                          fontSize: 12.0,
-                          color: Colors.blueGrey,
-                          letterSpacing: 1.0,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
+                child: Lottie.asset('assets/lottie/animation_loading.json',
+                    width: 100, height: 100),
               );
             } else {
               return Container(
-                color: Colors.white,
+                
                 height: double.infinity,
                 width: double.infinity,
                 child: SingleChildScrollView(
@@ -67,8 +55,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                               colors: [
-                                Colors.blue.shade500,
-                                Colors.green.shade300
+                                 brightness == Brightness.light ? Colors.blue.shade500 : Colors.blue.shade900,
+            brightness == Brightness.light ? Colors.green.shade300 : Colors.green.shade800,
                               ], // Define your gradient colors here
                             ),
                             borderRadius: BorderRadius.circular(10)),
@@ -76,10 +64,16 @@ class _ProfilePageState extends State<ProfilePage> {
                           children: [
                             Row(
                               children: [
-                                CircleAvatar(
-                                  radius: 50,
-                                  backgroundColor: Colors.white,
+                                Avatar(
+                                  elevation: 3,
+                                  shape: AvatarShape.rectangle(
+                                      60, 60, BorderRadius.circular(40)),
+                                  name: email, // Uses name initials (up to two)
                                 ),
+                                Text(
+                                  "   $email",
+                                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w100),
+                                )
                               ],
                             )
                           ],
@@ -179,26 +173,12 @@ class _ProfilePageState extends State<ProfilePage> {
                           children: [
                             Text('Log out'),
                             Spacer(),
-                            SizedBox(
-                              width: 50,
-                              height: 30,
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  fbAuth.signOut();
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  onPrimary: Colors.white,
-                                  primary: AppColor.primaryColor,
-                                  onSurface: Colors.grey,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                                child: Icon(
-                                  Icons.logout,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
+                            GestureDetector(
+                              onTap:(){fbAuth.signOut();},
+                              child: Icon(
+                                Icons.logout,
+                                color: Colors.white,
+                                size: 20,
                               ),
                             ),
                           ],
@@ -384,7 +364,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       } else {
                         return WebView(
                           initialUrl:
-                              'https://www.freeprivacypolicy.com/live/075d8ff8-1760-49b7-878d-d94ee0aac06d',
+                              '$termsConditions',
                           // Set the URL you want to display
                           javascriptMode: JavascriptMode.unrestricted,
                           onWebResourceError:
@@ -450,7 +430,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         );
                       } else {
                         return WebView(
-                          initialUrl: 'https://chat.openai.com',
+                          initialUrl: '$usersGuide',
                           // Set the URL you want to display
                           javascriptMode: JavascriptMode.unrestricted,
                           onWebResourceError:

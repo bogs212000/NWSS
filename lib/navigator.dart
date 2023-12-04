@@ -17,58 +17,30 @@ class NavTab extends StatefulWidget {
 
 class _NavTabState extends State<NavTab> {
   static List<Widget> _myPages = <Widget>[
-    HomePage(),
+
     HomePage(),
     ProfilePage(),
 
   ];
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
 
 
   @override
   Widget build(BuildContext context) {
+    Brightness brightness = MediaQuery.of(context).platformBrightness;
     return Scaffold(
-      // appBar: AppBar(
-      //   actions: [
-      //     Container(
-      //       padding: const EdgeInsets.only(right: 10),
-      //       child: Image.asset(
-      //         "assets/icons8-user-96.png",
-      //         scale: 3,
-      //       ),
-      //     ),
-      //   ],
-      //   elevation: 0,
-      //   backgroundColor: AppColor.primaryColor,
-      //   foregroundColor: Colors.white,
-      // ),
-      // drawer: Drawer(
-      //   child: ListView(
-      //     children: [
-      //       DrawerHeader(
-      //         decoration: BoxDecoration(
-      //           color: AppColor.primaryColor,
-      //         ),
-      //         child: Column(
-      //           children: [],
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ),
       body: _myPages[_selectedIndex],
       bottomNavigationBar: FFNavigationBar(
         theme: FFNavigationBarTheme(
-          barBackgroundColor: Colors.white,
+          barBackgroundColor: brightness == Brightness.light ? Colors.white : Colors.grey.withOpacity(0.5),
           selectedItemBorderColor: Colors.white,
-          selectedItemBackgroundColor: AppColor.primaryColor,
+          selectedItemBackgroundColor: brightness == Brightness.light ? AppColor.primaryColor : Colors.black54,
           selectedItemIconColor: Colors.white,
-          selectedItemLabelColor: Colors.black,
+          selectedItemLabelColor: brightness == Brightness.light ? Colors.black : Colors.white,
         ),
         items: [
 
-          FFNavigationBarItem(
-              iconData: Icons.chat_outlined, label: 'Message'),
+
           FFNavigationBarItem(iconData: Icons.home_outlined, label: 'Home'),
 
           FFNavigationBarItem(
