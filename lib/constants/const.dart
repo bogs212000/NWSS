@@ -8,6 +8,7 @@ final fbStore = FirebaseFirestore.instance;
 final fbAuth = FirebaseAuth.instance;
 String? email = FirebaseAuth.instance.currentUser?.email.toString();
 bool? releaseMode;
+bool? onlinePayment;
 String? termsConditions;
 String? usersGuide;
 DateTime now = DateTime.now();

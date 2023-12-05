@@ -1,9 +1,13 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:nwss/constants/app_colors.dart';
+import 'package:nwss/constants/const.dart';
+import 'package:shimmer/shimmer.dart';
 
 class PriceRate extends StatefulWidget {
   const PriceRate({super.key});
@@ -98,27 +102,197 @@ class _PriceRateState extends State<PriceRate> {
                   children: [
                     Row(
                       children: [
-                        Text(
-                          "Current Price",
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
+                        Flexible(
+                          child: Text(
+                            'Current water price per 1000 cubic meter',
+                            maxLines: 2,
+                            softWrap: false,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
+                        SizedBox(width: 20)
                       ],
                     ),
                     Row(
                       children: [
-                        Text(
-                          "200",
-                          style: TextStyle(
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
-                              color: AppColor.primaryColor),
+                        Shimmer.fromColors(
+                          period: Duration(milliseconds: 2000),
+                          baseColor: AppColor.primaryColor,
+                          highlightColor: Colors.grey.shade100,
+                          enabled: true,
+                          child: Text(
+                            "200",
+                            style: TextStyle(
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold,
+                                color: AppColor.primaryColor),
+                          ),
                         ),
                       ],
                     ),
+
                   ],
                 ))
               ],
+            ),
+            SizedBox(
+              height: releaseMode == true ? 500 : 400,
+              child: StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection("NewsUpdate")
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Somthing went wrong!",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 231, 25, 25),
+                          ),
+                        )
+                      ],
+                    );
+                  }
+                  if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return Center(
+                      child: Lottie.asset(
+                          'assets/lottie/animation_loading.json',
+                          width: 100, height: 100),
+                    );
+                  }
+                  if (snapshot.data?.size == 0) {
+                    return Center(
+                      child: Text('No Update yet!'),
+                    );
+                  }
+                  Row(children: [
+                    TextField(
+                      decoration: InputDecoration(),
+                    )
+                  ]);
+                  return AnimationLimiter(
+                    child: ListView(
+                      physics: snapshot.data!.size <= 4
+                          ? NeverScrollableScrollPhysics()
+                          : BouncingScrollPhysics(),
+                      padding: EdgeInsets.only(top: 0),
+                      children: snapshot.data!.docs
+                          .map((DocumentSnapshot document) {
+                        Map<String, dynamic> data =
+                        document.data()! as Map<String, dynamic>;
+                        return AnimationConfiguration.staggeredList(
+                          position: snapshot.data!.size,
+                          delay: Duration(milliseconds: 200),
+                          child: SlideAnimation(
+                            duration: Duration(milliseconds: 2500),
+                            curve: Curves.fastLinearToSlowEaseIn,
+                            child: FadeInAnimation(
+                              curve: Curves.fastLinearToSlowEaseIn,
+                              duration: Duration(milliseconds: 2500),
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 5, right: 5, bottom: 10),
+                                child: Card(
+                                  shadowColor:
+                                  Color.fromARGB(255, 34, 34, 34),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                    BorderRadius.circular(10),
+                                  ),
+                                  child: Container(
+                                    padding: EdgeInsets.all(10),
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                        BorderRadius.circular(10)),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              'Narra Water Supply System',
+                                              maxLines: 1,
+                                              softWrap: false,
+                                              overflow:
+                                              TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  fontSize: 11,
+                                                  fontWeight:
+                                                  FontWeight.w400),
+                                            ),
+                                            Spacer(),
+                                            Text(
+                                              data['date'],
+                                              maxLines: 1,
+                                              softWrap: false,
+                                              overflow:
+                                              TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  fontSize: 10,
+                                                  fontWeight:
+                                                  FontWeight.w200),
+                                            ),
+                                          ],
+                                        ),
+                                        Divider(),
+                                        Row(
+                                          children: [
+                                            Flexible(
+                                              child: Text(
+                                                data['title'],
+                                                maxLines: 1,
+                                                softWrap: false,
+                                                overflow: TextOverflow
+                                                    .ellipsis,
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                    FontWeight
+                                                        .bold),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Flexible(
+                                              child: Text(
+                                                data['descriptions'],
+                                                maxLines: 3,
+                                                softWrap: false,
+                                                overflow: TextOverflow
+                                                    .ellipsis,
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                    FontWeight
+                                                        .w200),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),

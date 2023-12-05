@@ -1,15 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nwss/constants/const.dart';
 
-Future<void> fetchRelease(Function setState) async {
+Future<void> fetchOnlinePayment(Function setState) async {
   try {
     final snapshot = await FirebaseFirestore.instance
         .collection('App Settings')
-        .doc('release')
+        .doc('OnlinePayment')
         .get();
-    releaseMode = snapshot.data()?['releaseMode'];
+    onlinePayment = snapshot.data()?['set'];
     setState(() {
-      releaseMode = releaseMode;
+      onlinePayment = onlinePayment;
     });
   } catch (e) {
     // Handle errors

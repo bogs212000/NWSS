@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:nwss/constants/app_colors.dart';
+import 'package:nwss/constants/const.dart';
 
 class LogPage extends StatefulWidget {
   const LogPage({super.key});
@@ -91,7 +92,9 @@ class _LogPageState extends State<LogPage> {
               height: 400,
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
-                    .collection("NewsUpdate")
+                    .collection("user")
+                    .doc(email)
+                    .collection('history')
                     .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -166,7 +169,7 @@ class _LogPageState extends State<LogPage> {
                                     ),
                                     Spacer(),
                                     Text(
-                                      data['date'],
+                                      data['date'].toString(),
                                       maxLines: 1,
                                       softWrap: false,
                                       overflow: TextOverflow.ellipsis,
@@ -178,34 +181,49 @@ class _LogPageState extends State<LogPage> {
                                 ),
                                 Divider(),
                                 Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween, // Aligns children to the start and end of the row
                                   children: [
                                     Flexible(
                                       child: Text(
-                                        data['title'],
+                                        data['mode'],
                                         maxLines: 1,
                                         softWrap: false,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
-                                            fontWeight: FontWeight.bold),
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.end, // Aligns children to the end of the row
+                                        children: [
+                                          Text(
+                                            'Amount: ',
+                                            maxLines: 3,
+                                            softWrap: false,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w200,
+                                            ),
+                                          ),
+                                          Text(
+                                            data['amount'].toString(),
+                                            maxLines: 3,
+                                            softWrap: false,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
                                 ),
-                                Row(
-                                  children: [
-                                    Flexible(
-                                      child: Text(
-                                        data['descriptions'],
-                                        maxLines: 3,
-                                        softWrap: false,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w200),
-                                      ),
-                                    ),
-                                  ],
-                                )
+
                               ],
                             ),
                           ),
