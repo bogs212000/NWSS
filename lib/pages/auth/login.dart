@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:nwss/constants/app_colors.dart';
 
 import '../../constants/const.dart';
+import 'forgot_pass.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,6 +14,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  bool _isPasswordVisible = false;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -55,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   children: [
                     SizedBox(
-                      height: 50,
+                      height: 60,
                       child: TextField(
                         controller: emailController,
                         keyboardType: TextInputType.emailAddress,
@@ -67,12 +69,12 @@ class _LoginPageState extends State<LoginPage> {
                               ? Colors.white
                               : Colors.white.withOpacity(0.3),
                           focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(15),
                             borderSide: BorderSide(color: Colors.grey),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(15),
                           ),
                           labelText: "Email",
                           prefixIcon:
@@ -82,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     SizedBox(height: 20),
                     SizedBox(
-                      height: 50,
+                      height: 60,
                       child: TextField(
                         controller: passwordController,
                         keyboardType: TextInputType.visiblePassword,
@@ -94,14 +96,24 @@ class _LoginPageState extends State<LoginPage> {
                               ? Colors.white
                               : Colors.white.withOpacity(0.3),
                           focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(15),
                             borderSide: BorderSide(color: Colors.grey),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(20.0),
+                            borderRadius: BorderRadius.circular(15.0),
                           ),
                           labelText: "Password",
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              });
+                            },
+                          ),
                           prefixIcon: Icon(Icons.lock, color: Colors.grey),
                         ),
                       ),
@@ -110,7 +122,9 @@ class _LoginPageState extends State<LoginPage> {
                     Row(
                       children: [
                         TextButton(
-                          onPressed: () async {},
+                          onPressed: () async {
+                            Navigator.of(context).push(_toForgotPass());
+                          },
                           child: Text(
                             "Forgot password?",
                             style: TextStyle(fontWeight: FontWeight.bold),
@@ -172,5 +186,23 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+  Route _toForgotPass() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, anotherAnimation) => ForgotPassPage(),
+      transitionDuration: Duration(milliseconds: 1000),
+      reverseTransitionDuration: Duration(milliseconds: 200),
+      transitionsBuilder: (context, animation, anotherAnimation, child) {
+        animation = CurvedAnimation(
+            parent: animation,
+            reverseCurve: Curves.fastOutSlowIn,
+            curve: Curves.fastLinearToSlowEaseIn);
 
+        return SlideTransition(
+            position: Tween(begin: Offset(1.0, 0.0), end: Offset(0.0, 0.0))
+                .animate(animation),
+
+            child: ForgotPassPage());
+      },
+    );
+  }
 }
