@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:lottie/lottie.dart';
 import 'package:nwss/constants/const.dart';
 
 class ForgotPassPage extends StatefulWidget {
@@ -169,8 +170,9 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Success'),
-          content: const Text('An email containing a link to reset your password has been sent to your email address.'),
+          title: Lottie.asset('assets/lottie/checkEmail.json'),
+          content: Text(
+              'An email containing a link to reset your password has been sent to your email address.'),
           actions: [
             TextButton(
               onPressed: () {

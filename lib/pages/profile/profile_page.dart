@@ -177,7 +177,6 @@ class _ProfilePageState extends State<ProfilePage> {
                               onTap:(){fbAuth.signOut();},
                               child: Icon(
                                 Icons.logout,
-                                color: Colors.white,
                                 size: 20,
                               ),
                             ),

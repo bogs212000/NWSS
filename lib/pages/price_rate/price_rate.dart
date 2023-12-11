@@ -24,7 +24,6 @@ class _PriceRateState extends State<PriceRate> {
       body: Container(
         height: double.infinity,
         width: double.infinity,
-
         child: Column(
           children: [
             Container(
@@ -124,7 +123,7 @@ class _PriceRateState extends State<PriceRate> {
                           highlightColor: Colors.grey.shade100,
                           enabled: true,
                           child: Text(
-                            "200",
+                            currentPrice.toString(),
                             style: TextStyle(
                                 fontSize: 40,
                                 fontWeight: FontWeight.bold,
@@ -133,7 +132,6 @@ class _PriceRateState extends State<PriceRate> {
                         ),
                       ],
                     ),
-
                   ],
                 ))
               ],
@@ -142,7 +140,9 @@ class _PriceRateState extends State<PriceRate> {
               height: releaseMode == true ? 500 : 400,
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
-                    .collection("NewsUpdate")
+                    .collection("price")
+                    .doc('price')
+                    .collection('priceUpdateHistory')
                     .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -162,12 +162,12 @@ class _PriceRateState extends State<PriceRate> {
                       ],
                     );
                   }
-                  if (snapshot.connectionState ==
-                      ConnectionState.waiting) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(
                       child: Lottie.asset(
                           'assets/lottie/animation_loading.json',
-                          width: 100, height: 100),
+                          width: 100,
+                          height: 100),
                     );
                   }
                   if (snapshot.data?.size == 0) {
@@ -186,10 +186,10 @@ class _PriceRateState extends State<PriceRate> {
                           ? NeverScrollableScrollPhysics()
                           : BouncingScrollPhysics(),
                       padding: EdgeInsets.only(top: 0),
-                      children: snapshot.data!.docs
-                          .map((DocumentSnapshot document) {
+                      children:
+                          snapshot.data!.docs.map((DocumentSnapshot document) {
                         Map<String, dynamic> data =
-                        document.data()! as Map<String, dynamic>;
+                            document.data()! as Map<String, dynamic>;
                         return AnimationConfiguration.staggeredList(
                           position: snapshot.data!.size,
                           delay: Duration(milliseconds: 200),
@@ -203,18 +203,16 @@ class _PriceRateState extends State<PriceRate> {
                                 padding: const EdgeInsets.only(
                                     left: 5, right: 5, bottom: 10),
                                 child: Card(
-                                  shadowColor:
-                                  Color.fromARGB(255, 34, 34, 34),
+                                  shadowColor: Color.fromARGB(255, 34, 34, 34),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                    BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Container(
                                     padding: EdgeInsets.all(10),
                                     width: double.infinity,
                                     decoration: BoxDecoration(
                                         borderRadius:
-                                        BorderRadius.circular(10)),
+                                            BorderRadius.circular(10)),
                                     child: Column(
                                       children: [
                                         Row(
@@ -223,24 +221,20 @@ class _PriceRateState extends State<PriceRate> {
                                               'Narra Water Supply System',
                                               maxLines: 1,
                                               softWrap: false,
-                                              overflow:
-                                              TextOverflow.ellipsis,
+                                              overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
                                                   fontSize: 11,
-                                                  fontWeight:
-                                                  FontWeight.w400),
+                                                  fontWeight: FontWeight.w400),
                                             ),
                                             Spacer(),
                                             Text(
                                               data['date'],
                                               maxLines: 1,
                                               softWrap: false,
-                                              overflow:
-                                              TextOverflow.ellipsis,
+                                              overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
                                                   fontSize: 10,
-                                                  fontWeight:
-                                                  FontWeight.w200),
+                                                  fontWeight: FontWeight.w200),
                                             ),
                                           ],
                                         ),
@@ -249,37 +243,17 @@ class _PriceRateState extends State<PriceRate> {
                                           children: [
                                             Flexible(
                                               child: Text(
-                                                data['title'],
+                                                data['price'].toString(),
                                                 maxLines: 1,
                                                 softWrap: false,
-                                                overflow: TextOverflow
-                                                    .ellipsis,
+                                                overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                     fontWeight:
-                                                    FontWeight
-                                                        .bold),
+                                                        FontWeight.bold),
                                               ),
                                             ),
                                           ],
                                         ),
-                                        Row(
-                                          children: [
-                                            Flexible(
-                                              child: Text(
-                                                data['descriptions'],
-                                                maxLines: 3,
-                                                softWrap: false,
-                                                overflow: TextOverflow
-                                                    .ellipsis,
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    fontWeight:
-                                                    FontWeight
-                                                        .w200),
-                                              ),
-                                            ),
-                                          ],
-                                        )
                                       ],
                                     ),
                                   ),
