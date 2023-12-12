@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:nwss/await/fetch.dart';
 import 'package:nwss/constants/app_colors.dart';
 import 'package:nwss/constants/const.dart';
 import 'package:shimmer/shimmer.dart';
@@ -17,6 +18,11 @@ class PriceRate extends StatefulWidget {
 }
 
 class _PriceRateState extends State<PriceRate> {
+  @override
+  void initState() {
+    super.initState();
+    fetcCurrentPrice(setState);
+  }
   @override
   Widget build(BuildContext context) {
     Brightness brightness = MediaQuery.of(context).platformBrightness;
@@ -142,7 +148,8 @@ class _PriceRateState extends State<PriceRate> {
                 stream: FirebaseFirestore.instance
                     .collection("price")
                     .doc('price')
-                    .collection('priceUpdateHistory')
+                    .collection("priceUpdateHistory")
+                    .orderBy("createdAt", descending: true)
                     .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
