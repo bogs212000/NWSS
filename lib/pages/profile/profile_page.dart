@@ -21,7 +21,6 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     Brightness brightness = MediaQuery.of(context).platformBrightness;
     return Scaffold(
-      
       body: RefreshIndicator(
         backgroundColor: AppColor.primaryColorLight,
         color: AppColor.primaryColor,
@@ -40,7 +39,6 @@ class _ProfilePageState extends State<ProfilePage> {
               );
             } else {
               return Container(
-                
                 height: double.infinity,
                 width: double.infinity,
                 child: SingleChildScrollView(
@@ -55,8 +53,12 @@ class _ProfilePageState extends State<ProfilePage> {
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                               colors: [
-                                 brightness == Brightness.light ? Colors.blue.shade500 : Colors.blue.shade900,
-            brightness == Brightness.light ? Colors.green.shade300 : Colors.green.shade800,
+                                brightness == Brightness.light
+                                    ? Colors.blue.shade500
+                                    : Colors.blue.shade900,
+                                brightness == Brightness.light
+                                    ? Colors.green.shade300
+                                    : Colors.green.shade800,
                               ], // Define your gradient colors here
                             ),
                             borderRadius: BorderRadius.circular(10)),
@@ -68,11 +70,15 @@ class _ProfilePageState extends State<ProfilePage> {
                                   elevation: 3,
                                   shape: AvatarShape.rectangle(
                                       60, 60, BorderRadius.circular(40)),
-                                  name: email, // Uses name initials (up to two)
+                                  name: email
+                                      .toString()
+                                      .toUpperCase(), // Uses name initials (up to two)
                                 ),
                                 Text(
                                   "   $email",
-                                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w100),
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w100),
                                 )
                               ],
                             )
@@ -174,7 +180,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             Text('Log out'),
                             Spacer(),
                             GestureDetector(
-                              onTap:(){fbAuth.signOut();},
+                              onTap: () {
+                                _logOut(context);
+                              },
                               child: Icon(
                                 Icons.logout,
                                 size: 20,
@@ -362,8 +370,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         );
                       } else {
                         return WebView(
-                          initialUrl:
-                              '$termsConditions',
+                          initialUrl: '$termsConditions',
                           // Set the URL you want to display
                           javascriptMode: JavascriptMode.unrestricted,
                           onWebResourceError:
@@ -379,6 +386,32 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
           ),
+        );
+      },
+    );
+  }
+
+  void _logOut(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Log Out'),
+          content: Text('Are you sure you want to log out?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                fbAuth.signOut();
+              },
+              child: Text('Yes'),
+            ),
+          ],
         );
       },
     );

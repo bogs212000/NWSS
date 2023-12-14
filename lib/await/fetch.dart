@@ -35,6 +35,23 @@ Future<void> fetchUsersGuide(Function setState) async {
   }
 }
 
+Future<void> fetchUserFullname(Function setState) async {
+  try {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('user')
+        .doc(email)
+        .get();
+
+    fullname = snapshot.data()?['fullname'];
+
+    setState(() {
+      fullname = fullname;
+    });
+  } catch (e) {
+    // Handle errors
+  }
+}
+
 Future<void> fetcCurrentPrice(Function setState) async {
   try {
     final snapshot =

@@ -7,6 +7,7 @@ bool? loadingLogin;
 final fbStore = FirebaseFirestore.instance;
 final fbAuth = FirebaseAuth.instance;
 String? email = FirebaseAuth.instance.currentUser?.email.toString();
+String? fullname;
 bool? releaseMode;
 bool? onlinePayment;
 String? termsConditions;

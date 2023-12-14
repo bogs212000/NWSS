@@ -174,11 +174,11 @@ class _LoginPageState extends State<LoginPage>
                                       try {
                                         await fbAuth.signInWithEmailAndPassword(
                                           email: emailController.text
-                                              .trim()
-                                              .toString(),
+                                              .trim(),
+
                                           password: passwordController.text
                                               .trim()
-                                              .toString(),
+
                                         );
                                         setState(() {
                                           isLoading = false;

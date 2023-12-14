@@ -28,6 +28,10 @@ class MyApp extends StatelessWidget {
             // Remove the debug banner
             debugShowCheckedModeBanner: false,
             title: 'NWSS',
+            routes: {
+              '/login': (context) => AuthWrapper(),
+              // Add other routes as needed
+            },
             theme: ThemeData(primarySwatch: Colors.blue, backgroundColor: Colors.green,),
             darkTheme: ThemeData.dark(),
             themeMode: ThemeMode.system,

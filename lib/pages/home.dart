@@ -44,6 +44,7 @@ class _HomePageState extends State<HomePage> {
     fetchTermsConditions(setState);
     fetchOnlinePayment(setState);
     fetcCurrentPrice(setState);
+    fetchUserFullname(setState);
   }
 
   @override

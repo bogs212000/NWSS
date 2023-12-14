@@ -158,6 +158,7 @@ class _SupportPageState extends State<SupportPage> {
     if (_messageController.text.trim().isNotEmpty) {
       await _firestore.collection('messages').doc(email).set({
         'userEmail': email,
+        'fullname': fullname,
       });
       await _firestore
           .collection('messages')

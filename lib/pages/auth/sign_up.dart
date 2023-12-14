@@ -8,6 +8,7 @@ import 'package:nwss/constants/const.dart';
 import 'login.dart';
 
 final TextEditingController addressController = TextEditingController();
+final TextEditingController addressInfoController = TextEditingController();
 final TextEditingController fnameController = TextEditingController();
 final TextEditingController mnameController = TextEditingController();
 final TextEditingController lnameController = TextEditingController();
@@ -35,7 +36,8 @@ class _SignUpPageState extends State<SignUpPage> {
       appBar: AppBar(
         leading: GestureDetector(
           onTap: () {
-            Navigator.pop(context);
+            Navigator.of(context)
+                .pushNamedAndRemoveUntil('/login', (route) => false);
           },
           child: Icon(
             Icons.arrow_back_ios_new,
@@ -345,7 +347,7 @@ class _SignUpPage1State extends State<SignUpPage1> {
                     ),
                     SizedBox(height: 10),
                     TextField(
-                      controller: emailController,
+                      controller: addressInfoController,
                       keyboardType: TextInputType.emailAddress,
                       textAlign: TextAlign.left,
                       style: TextStyle(
@@ -589,42 +591,71 @@ class _SignUpPage2State extends State<SignUpPage2> {
                     showAlertDialogError(context);
                   } else {
                     try {
+                      // Extract user input
+                      String fname = fnameController.text;
+                      String mname = mnameController.text;
+                      String lname = lnameController.text;
+                      String fullname = "$fname $mname $lname";
+
+// Default values
+                      bool? banned = false;
+                      double toPay = 0.0;
+                      double? pNum;
+
+// Create a new user
                       await fbAuth.createUserWithEmailAndPassword(
-                          email: emailController.text.trim(),
-                          password: passwordController.text.trim());
-                      await fbStore
-                          .collection("Users")
-                          .doc(emailController.text)
-                          .set(
-                        {
-                          "role": role,
-                          "first": fnameController.text,
-                          "middle": mnameController.text,
-                          "last": lnameController.text,
-                          "email": emailController.text.trim(),
-                          "verified?": verified,
-                          "address": addressController
-                        },
+                        email: emailController.text.trim(),
+                        password: passwordController.text.trim(),
                       );
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        backgroundColor: Color.fromARGB(255, 0, 179, 92),
-                        content: Row(
-                          children: [
-                            Icon(
-                              Icons.check_circle,
-                              color: Colors.white,
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              'Thank you!',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ],
+
+// Store user details in Firestore
+                      await fbStore
+                          .collection("user")
+                          .doc(emailController.text)
+                          .set({
+                        "role": role,
+                        "first": fname,
+                        "middle": mname,
+                        "last": lname,
+                        "fullname": fullname,
+                        "email": emailController.text.trim(),
+                        "contactNo": pNum,
+                        "verified?": verified,
+                        "address": addressController.text,
+                        "banned": banned,
+                        'balance_to_pay': toPay,
+                      });
+
+                      fnameController.clear();
+                      mnameController.clear();
+                      lnameController.clear();
+                      passwordController.clear();
+                      cpasswordController.clear();
+                      emailController.clear();
+                      addressController.clear();
+
+                      // Navigator.of(context)
+                      //     .pushNamedAndRemoveUntil('/login', (route) => false);
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Color.fromARGB(255, 0, 179, 92),
+                          content: Row(
+                            children: [
+                              Icon(
+                                Icons.check_circle,
+                                color: Colors.white,
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                'Thank you!',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ],
+                          ),
+                          duration: Duration(seconds: 5),
                         ),
-                        duration: Duration(seconds: 5),
-                      ));
+                      );
                     } on FirebaseAuthException catch (e) {
                       print(e);
                       if (e.code == "invalid-email") {

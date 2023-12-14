@@ -23,6 +23,7 @@ class _PriceRateState extends State<PriceRate> {
     super.initState();
     fetcCurrentPrice(setState);
   }
+
   @override
   Widget build(BuildContext context) {
     Brightness brightness = MediaQuery.of(context).platformBrightness;
@@ -109,7 +110,7 @@ class _PriceRateState extends State<PriceRate> {
                       children: [
                         Flexible(
                           child: Text(
-                            'Current water price per 1000 cubic meter',
+                            'Current water price',
                             maxLines: 2,
                             softWrap: false,
                             overflow: TextOverflow.ellipsis,
@@ -143,7 +144,7 @@ class _PriceRateState extends State<PriceRate> {
               ],
             ),
             SizedBox(
-              height: releaseMode == true ? 500 : 400,
+              height: releaseMode == true ? 700 : 400,
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection("price")
@@ -218,6 +219,9 @@ class _PriceRateState extends State<PriceRate> {
                                     padding: EdgeInsets.all(10),
                                     width: double.infinity,
                                     decoration: BoxDecoration(
+                                        color: data['changed'] != 'up'
+                                            ? Colors.green.withOpacity(0.7)
+                                            : Colors.red.withOpacity(0.7),
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                     child: Column(
@@ -248,19 +252,20 @@ class _PriceRateState extends State<PriceRate> {
                                         Divider(),
                                         Row(
                                           children: [
-                                            Flexible(
-                                              child: Text(
-                                                data['price'].toString(),
-                                                maxLines: 1,
-                                                softWrap: false,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
+                                            Text(
+                                              data['price'].toString(),
+                                              maxLines: 1,
+                                              softWrap: false,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  fontWeight:
+                                                      FontWeight.bold),
                                             ),
+                                            Spacer(),
+                                            data['changed'] == 'up' ? Icon(Icons.upload) : Icon(Icons.download)
                                           ],
                                         ),
+
                                       ],
                                     ),
                                   ),
