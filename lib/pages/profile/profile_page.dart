@@ -408,6 +408,8 @@ class _ProfilePageState extends State<ProfilePage> {
             TextButton(
               onPressed: () {
                 fbAuth.signOut();
+                Navigator.pop(context);
+
               },
               child: Text('Yes'),
             ),

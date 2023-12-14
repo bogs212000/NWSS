@@ -602,13 +602,6 @@ class _SignUpPage2State extends State<SignUpPage2> {
                       double toPay = 0.0;
                       double? pNum;
 
-// Create a new user
-                      await fbAuth.createUserWithEmailAndPassword(
-                        email: emailController.text.trim(),
-                        password: passwordController.text.trim(),
-                      );
-
-// Store user details in Firestore
                       await fbStore
                           .collection("user")
                           .doc(emailController.text)
@@ -619,12 +612,20 @@ class _SignUpPage2State extends State<SignUpPage2> {
                         "last": lname,
                         "fullname": fullname,
                         "email": emailController.text.trim(),
-                        "contactNo": pNum,
+                        "contactNo": 'test',
+                        "contact_number": 'test',
                         "verified?": verified,
                         "address": addressController.text,
                         "banned": banned,
-                        'balance_to_pay': toPay,
+                        'balance_to_pay': "0",
+                        "water_usage": "0"
                       });
+
+                      await fbAuth.createUserWithEmailAndPassword(
+                        email: emailController.text.trim(),
+                        password: passwordController.text.trim(),
+                      );
+
 
                       fnameController.clear();
                       mnameController.clear();
@@ -634,8 +635,8 @@ class _SignUpPage2State extends State<SignUpPage2> {
                       emailController.clear();
                       addressController.clear();
 
-                      // Navigator.of(context)
-                      //     .pushNamedAndRemoveUntil('/login', (route) => false);
+                      Navigator.of(context)
+                          .pushNamedAndRemoveUntil('/login', (route) => false);
 
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
