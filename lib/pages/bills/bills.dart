@@ -76,7 +76,7 @@ class _BillsPageState extends State<BillsPage> {
                       ),
                       const SizedBox(width: 10),
                       Text(
-                        "Transactions",
+                        "Bills",
                         style: GoogleFonts.nunitoSans(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
