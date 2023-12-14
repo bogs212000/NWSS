@@ -20,6 +20,7 @@ import 'package:nwss/pages/price_rate/price_rate.dart';
 import 'package:nwss/pages/support/support.page.dart';
 import 'package:velocity_x/velocity_x.dart';
 
+import 'bills/bills.dart';
 import 'force_update.dart';
 
 int newsUpdate = 400;
@@ -278,7 +279,7 @@ class _HomePageState extends State<HomePage> {
                                   ],
                                 ),
                                 onTap: () async {
-                                  Navigator.of(context).push(_toAnalytics());
+                                  Navigator.of(context).push(_toBills());
                                 },
                               )
                                   .animate()
@@ -655,6 +656,26 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Route _toBills() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, anotherAnimation) => BillsPage(),
+      transitionDuration: Duration(milliseconds: 1000),
+      reverseTransitionDuration: Duration(milliseconds: 200),
+      transitionsBuilder: (context, animation, anotherAnimation, child) {
+        animation = CurvedAnimation(
+            parent: animation,
+            reverseCurve: Curves.fastOutSlowIn,
+            curve: Curves.fastLinearToSlowEaseIn);
+
+        return SlideTransition(
+            position: Tween(begin: Offset(0.0, 1.0), end: Offset(0.0, 0.0))
+                .animate(animation),
+            textDirection: TextDirection.rtl,
+            child: BillsPage());
+      },
+    );
+  }
+
   Route _toTransaction() {
     return PageRouteBuilder(
       pageBuilder: (context, animation, anotherAnimation) => LogPage(),
@@ -685,7 +706,6 @@ class _HomePageState extends State<HomePage> {
             parent: animation,
             reverseCurve: Curves.fastOutSlowIn,
             curve: Curves.fastLinearToSlowEaseIn);
-
         return SlideTransition(
             position: Tween(begin: Offset(0.0, 1.0), end: Offset(0.0, 0.0))
                 .animate(animation),

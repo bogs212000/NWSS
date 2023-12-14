@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:nwss/navigator.dart';
 import 'package:nwss/pages/auth/auth.wrapper.dart';
 import 'package:nwss/pages/auth/login.dart';
+import 'package:nwss/pages/splash_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(primarySwatch: Colors.blue, backgroundColor: Colors.green,),
             darkTheme: ThemeData.dark(),
             themeMode: ThemeMode.system,
-            home: const AuthWrapper(),
+            home: const SplashPage(),
           );
         });
   }

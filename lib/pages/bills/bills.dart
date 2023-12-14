@@ -7,14 +7,14 @@ import 'package:lottie/lottie.dart';
 import 'package:nwss/constants/app_colors.dart';
 import 'package:nwss/constants/const.dart';
 
-class LogPage extends StatefulWidget {
-  const LogPage({super.key});
+class BillsPage extends StatefulWidget {
+  const BillsPage({super.key});
 
   @override
-  State<LogPage> createState() => _LogPageState();
+  State<BillsPage> createState() => _BillsPageState();
 }
 
-class _LogPageState extends State<LogPage> {
+class _BillsPageState extends State<BillsPage> {
   @override
   Widget build(BuildContext context) {
     Brightness brightness = MediaQuery.of(context).platformBrightness;
@@ -72,7 +72,7 @@ class _LogPageState extends State<LogPage> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child:
-                            Image.asset("assets/analytics_icon.png", scale: 3),
+                            Image.asset("assets/icons8-bill.png", scale: 3),
                       ),
                       const SizedBox(width: 10),
                       Text(

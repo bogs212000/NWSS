@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:nwss/constants/const.dart';
+
 
 class ForgotPassPage extends StatefulWidget {
   const ForgotPassPage({super.key});
@@ -47,8 +49,40 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
     Brightness brightness = MediaQuery.of(context).platformBrightness;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor:
-            brightness == ThemeMode.light ? Colors.blue : Colors.blue.shade800,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(
+            Icons.arrow_back_ios_new,
+            size: 30,
+            color: Colors.white,
+          ),
+        ),
+        title: Text(
+          "Forgot Password",
+          style: GoogleFonts.nunitoSans(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                brightness == Brightness.light
+                    ? Colors.blue.shade500
+                    : Colors.blue.shade900,
+                brightness == Brightness.light
+                    ? Colors.green.shade300
+                    : Colors.green.shade800,
+              ],
+            ),
+          ),
+        ),
       ),
       body: Container(
         padding: EdgeInsets.all(20),
