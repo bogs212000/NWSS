@@ -194,7 +194,7 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
 
   bool _isValidEmail(String email) {
     // Regular expression for a simple email validation
-    String emailRegex = r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
+    String emailRegex = r'^[a-z][\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
     RegExp regex = RegExp(emailRegex);
     return regex.hasMatch(email);
   }

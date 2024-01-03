@@ -1,6 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nwss/constants/const.dart';
 
+Future<void> fetchAccountID(Function setState) async {
+  try {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('User')
+        .doc(email)
+        .get();
+
+    account_ID = snapshot.data()?['account_ID'];
+
+    setState(() {
+      account_ID  = account_ID ;
+    });
+  } catch (e) {
+    // Handle errors
+  }
+}
+
 Future<void> fetchTermsConditions(Function setState) async {
   try {
     final snapshot = await FirebaseFirestore.instance

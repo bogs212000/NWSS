@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -15,6 +16,7 @@ final TextEditingController lnameController = TextEditingController();
 final TextEditingController emailController = TextEditingController();
 final TextEditingController passwordController = TextEditingController();
 final TextEditingController cpasswordController = TextEditingController();
+final TextEditingController account = TextEditingController();
 String role = 'client';
 String? verified = "Yes";
 String dropdownvalue = '';
@@ -29,6 +31,23 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  bool isTextExisting = true;
+
+  void checkIfTextExists(String inputText) {
+    FirebaseFirestore.instance
+        .collection('Accounts')
+        .where('account_ID', isEqualTo: inputText)
+        .get()
+        .then((querySnapshot) {
+      setState(() {
+        isTextExisting = querySnapshot.docs.isNotEmpty;
+      });
+    }).catchError((error) {
+      // Handle any errors that occurred
+      print('Error while checking if input text exists: $error');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Brightness brightness = MediaQuery.of(context).platformBrightness;
@@ -88,6 +107,53 @@ class _SignUpPageState extends State<SignUpPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   // Align elements to the start (left) of the column
                   children: [
+                    TextField(
+                      controller: account,
+                      keyboardType: TextInputType.name,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: brightness == Brightness.light
+                            ? Colors.white
+                            : Colors.white.withOpacity(0.3),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        labelText: 'Account ID',
+                      ),
+                      onChanged: (text) {
+                        checkIfTextExists(text);
+                      },
+                    ),
+                    SizedBox(height: 8),
+                    if (!isTextExisting)
+                      Text(
+                        'Account does not exist',
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.red,
+                        ),
+                      )
+                    else if (isTextExisting && account.text.isNotEmpty)
+                      Text(
+                        'Account exist',
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.green,
+                        ),
+                      )
+                    else if (isTextExisting || account.text.isEmpty)
+                      SizedBox(),
+                    SizedBox(height: 10),
                     TextField(
                       controller: fnameController,
                       keyboardType: TextInputType.emailAddress,
@@ -177,7 +243,14 @@ class _SignUpPageState extends State<SignUpPage> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).push(_toSignupPage1());
+                  if (!isTextExisting ||
+                      fnameController.text.isEmpty ||
+                      mnameController.text.isEmpty ||
+                      lnameController.text.isEmpty ||
+                      account.text.isEmpty) {
+                  } else {
+                    Navigator.of(context).push(_toSignupPage1());
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   onPrimary: Colors.white,
@@ -604,9 +677,10 @@ class _SignUpPage2State extends State<SignUpPage2> {
 
                       await fbStore
                           .collection("user")
-                          .doc(emailController.text)
+                          .doc(emailController.text.trim())
                           .set({
                         "role": role,
+                        'account_ID': account.text.trim(),
                         "first": fname,
                         "middle": mname,
                         "last": lname,
@@ -625,7 +699,6 @@ class _SignUpPage2State extends State<SignUpPage2> {
                         email: emailController.text.trim(),
                         password: passwordController.text.trim(),
                       );
-
 
                       fnameController.clear();
                       mnameController.clear();
@@ -704,14 +777,15 @@ class _SignUpPage2State extends State<SignUpPage2> {
     );
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Thank you"),
+      title: Text("Notice"),
       content: Text(
-          "Please verify your email first and wait for your account to be fully verified by the agencies."),
+          "Please input your email and password first."),
+      actions: [TextButton(onPressed: (){Navigator.pop(context);}, child: Text('OK'))],
     );
 
     // show the dialog
     showDialog(
-      barrierDismissible: false,
+      barrierDismissible: true,
       context: context,
       builder: (BuildContext context) {
         return alert;

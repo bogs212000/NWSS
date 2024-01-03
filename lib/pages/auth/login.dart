@@ -2,11 +2,14 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:nwss/await/fetch.dart';
 import 'package:nwss/await/loading.dart';
 import 'package:nwss/constants/app_colors.dart';
 import 'package:nwss/pages/auth/sign_up.dart';
+import 'package:nwss/pages/terms.conditions/terms_and_conditions.dart';
 
 import '../../constants/const.dart';
+import '../apply/how_to_apply.dart';
 import 'forgot_pass.dart';
 
 class LoginPage extends StatefulWidget {
@@ -23,6 +26,11 @@ class _LoginPageState extends State<LoginPage>
   bool _isPasswordVisible = false;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  void initState() {
+    super.initState();
+    fetchTermsConditions(setState);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +69,9 @@ class _LoginPageState extends State<LoginPage>
                           Text(
                             "Log in",
                             style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.w600),
+                                fontSize: 25,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white),
                           ),
                         ],
                       ),
@@ -72,7 +82,7 @@ class _LoginPageState extends State<LoginPage>
                           ),
                           Text("Welcome back to NWSS app.",
                               style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.w300)),
+                                  fontSize: 15, fontWeight: FontWeight.w300, color: Colors.white)),
                         ],
                       ),
                       Container(
@@ -102,9 +112,9 @@ class _LoginPageState extends State<LoginPage>
                                     borderSide: BorderSide(color: Colors.grey),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
-                                  labelText: "Email",
+                                  hintText: 'Email',
                                   prefixIcon: Icon(
-                                    Icons.email_outlined,
+                                    Icons.email_outlined, color: Colors.grey,
                                   ),
                                 ),
                               ),
@@ -131,7 +141,7 @@ class _LoginPageState extends State<LoginPage>
                                     borderSide: BorderSide(color: Colors.grey),
                                     borderRadius: BorderRadius.circular(15.0),
                                   ),
-                                  labelText: "Password",
+                                  hintText: 'Password',
                                   suffixIcon: IconButton(
                                     icon: Icon(
                                       _isPasswordVisible
@@ -145,7 +155,7 @@ class _LoginPageState extends State<LoginPage>
                                       });
                                     },
                                   ),
-                                  prefixIcon: Icon(Icons.lock),
+                                  prefixIcon: Icon(Icons.lock, color: Colors.grey),
                                 ),
                               ),
                             ),
@@ -158,8 +168,9 @@ class _LoginPageState extends State<LoginPage>
                                   },
                                   child: Text(
                                     "Forgot password?",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
                                   ),
                                 ),
                                 Spacer(),
@@ -173,13 +184,9 @@ class _LoginPageState extends State<LoginPage>
 
                                       try {
                                         await fbAuth.signInWithEmailAndPassword(
-                                          email: emailController.text
-                                              .trim(),
-
-                                          password: passwordController.text
-                                              .trim()
-
-                                        );
+                                            email: emailController.text.trim(),
+                                            password:
+                                                passwordController.text.trim());
                                         setState(() {
                                           isLoading = false;
                                         });
@@ -232,12 +239,11 @@ class _LoginPageState extends State<LoginPage>
                         ),
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(width: 40),
+                          SizedBox(width: 20),
                           Text(
                             "Don't have an Account?",
-                            style: TextStyle(fontWeight: FontWeight.w300),
+                            style: TextStyle(fontSize: 12,fontWeight: FontWeight.w300),
                           ),
                           TextButton(
                             onPressed: () async {
@@ -245,13 +251,48 @@ class _LoginPageState extends State<LoginPage>
                             },
                             child: Text(
                               "Sign Up",
-                              style: TextStyle(
-                                  color: AppColor.primaryColor,
-                                  fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize: 12, color: Colors.white),
                             ),
                           ),
                         ],
                       ),
+
+                      Row(
+                        children: [
+                          SizedBox(width: 20),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(_toHowToApply());
+                            },
+                            child: Text(
+                              "How do I apply to have a water line installed?",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                      Row(
+                        children: [
+                          SizedBox(width: 20),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(_toTermsAndConditions());
+                            },
+                            child: Text(
+                              "Terms and conditions",
+                              style: TextStyle(
+                                fontSize: 12,
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+
                     ],
                   ),
                 ),
@@ -275,6 +316,43 @@ class _LoginPageState extends State<LoginPage>
             position: Tween(begin: Offset(1.0, 0.0), end: Offset(0.0, 0.0))
                 .animate(animation),
             child: ForgotPassPage());
+      },
+    );
+  }
+  Route _toTermsAndConditions() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, anotherAnimation) => TermsAndConditions(),
+      transitionDuration: Duration(milliseconds: 1000),
+      reverseTransitionDuration: Duration(milliseconds: 200),
+      transitionsBuilder: (context, animation, anotherAnimation, child) {
+        animation = CurvedAnimation(
+            parent: animation,
+            reverseCurve: Curves.fastOutSlowIn,
+            curve: Curves.fastLinearToSlowEaseIn);
+
+        return SlideTransition(
+            position: Tween(begin: Offset(1.0, 0.0), end: Offset(0.0, 0.0))
+                .animate(animation),
+            child: TermsAndConditions());
+      },
+    );
+  }
+
+  Route _toHowToApply() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, anotherAnimation) => HowToApply(),
+      transitionDuration: Duration(milliseconds: 1000),
+      reverseTransitionDuration: Duration(milliseconds: 200),
+      transitionsBuilder: (context, animation, anotherAnimation, child) {
+        animation = CurvedAnimation(
+            parent: animation,
+            reverseCurve: Curves.fastOutSlowIn,
+            curve: Curves.fastLinearToSlowEaseIn);
+
+        return SlideTransition(
+            position: Tween(begin: Offset(1.0, 0.0), end: Offset(0.0, 0.0))
+                .animate(animation),
+            child: HowToApply());
       },
     );
   }

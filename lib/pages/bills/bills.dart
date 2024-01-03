@@ -20,7 +20,6 @@ class _BillsPageState extends State<BillsPage> {
     Brightness brightness = MediaQuery.of(context).platformBrightness;
     return Scaffold(
       body: Container(
-
         height: double.infinity,
         width: double.infinity,
         child: Column(
@@ -72,7 +71,7 @@ class _BillsPageState extends State<BillsPage> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child:
-                            Image.asset("assets/icons8-bill.png", scale: 3),
+                            Image.asset("assets/icons8-bill.png", scale: 3.3, color: Colors.blueAccent,),
                       ),
                       const SizedBox(width: 10),
                       Text(
@@ -93,9 +92,9 @@ class _BillsPageState extends State<BillsPage> {
               height: 400,
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
-                    .collection("user")
-                    .doc(email)
-                    .collection('history')
+                    .collection("Accounts")
+                    .doc(account_ID)
+                    .collection('bills')
                     .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -125,7 +124,7 @@ class _BillsPageState extends State<BillsPage> {
                   }
                   if (snapshot.data?.size == 0) {
                     return Center(
-                      child: Text('No Update yet!'),
+                      child: Text('No bills yet!'),
                     );
                   }
                   Row(children: const [

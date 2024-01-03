@@ -78,7 +78,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   "   $email",
                                   style: TextStyle(
                                       fontSize: 15,
-                                      fontWeight: FontWeight.w100),
+                                      fontWeight: FontWeight.w400, color: Colors.white),
                                 )
                               ],
                             )
