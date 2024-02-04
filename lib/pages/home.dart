@@ -15,6 +15,7 @@ import 'package:nwss/constants/const.dart';
 import 'package:nwss/pages/analytics/alalytics.dart';
 import 'package:nwss/pages/analytics/fetch_chart_data.dart';
 import 'package:nwss/pages/log/log.dart';
+import 'package:nwss/pages/pay/month_to_pay.dart';
 import 'package:nwss/pages/pay/pay_page.dart';
 import 'package:nwss/pages/price_rate/price_rate.dart';
 import 'package:nwss/pages/support/support.page.dart';
@@ -34,9 +35,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late Stream<double> totalBalanceStream;
+
   @override
   void initState() {
     super.initState();
+    fetchGcashNum(setState);
+    fetchAccountID(setState);
     fetchforceUpdate(setState);
     fetchRelease(setState);
     fetchChartData(setState);
@@ -45,7 +50,34 @@ class _HomePageState extends State<HomePage> {
     fetchOnlinePayment(setState);
     fetcCurrentPrice(setState);
     fetchUserFullname(setState);
+    super.initState();
+    // Initialize the stream with the initial value of totalBalance
+    totalBalanceStream = getTotalBalanceStream();
   }
+
+
+  Stream<double> getTotalBalanceStream() {
+    return FirebaseFirestore.instance
+        .collection("Accounts")
+        .doc(account_ID)
+        .collection("bills")
+        .doc("2023")
+        .collection("month")
+        .snapshots()
+        .map((querySnapshot) {
+      // Calculate the total amount from the query snapshot
+      double totalAmount = 0;
+      for (QueryDocumentSnapshot<Map<String, dynamic>> document
+      in querySnapshot.docs) {
+        if (document.data().containsKey('bills')) {
+          totalAmount += (document.data()['bills'] as num).toDouble();
+        }
+      }
+      return totalAmount;
+    });
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -115,8 +147,9 @@ class _HomePageState extends State<HomePage> {
                                           Text(
                                             '  Hello, have a great Day!',
                                             style: TextStyle(
+                                                color: Colors.white,
                                                 fontSize: 15,
-                                                fontWeight: FontWeight.w100),
+                                                fontWeight: FontWeight.w200),
                                           )
                                         ],
                                       )
@@ -129,8 +162,9 @@ class _HomePageState extends State<HomePage> {
                                           Text(
                                             '  Hello, have a great Evening!',
                                             style: TextStyle(
+                                              color: Colors.white,
                                                 fontSize: 15,
-                                                fontWeight: FontWeight.w100),
+                                                fontWeight: FontWeight.w200),
                                           )
                                         ],
                                       ),
@@ -185,17 +219,41 @@ class _HomePageState extends State<HomePage> {
                                                     ? AppColor.primaryColor
                                                     : Colors.white,
                                               ),
-                                              Text(
-                                                  "${snapshot.data['balance_to_pay']}",
-                                                  style: TextStyle(
-                                                      fontSize: 40,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: brightness ==
-                                                              Brightness.light
-                                                          ? AppColor
-                                                              .primaryColor
-                                                          : Colors.white)),
+                                              StreamBuilder<double>(
+                                                stream: totalBalanceStream,
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                                    // If the data is still loading, display a loading indicator
+                                                    return Text(
+                                                        'Processing...',
+                                                        style: TextStyle(
+                                                            fontSize: 20,
+                                                            fontWeight:
+                                                            FontWeight.bold,
+                                                            color: brightness ==
+                                                                Brightness.light
+                                                                ? AppColor
+                                                                .primaryColor
+                                                                : Colors.white));
+                                                  } else if (snapshot.hasError) {
+                                                    // If there's an error, display an error message
+                                                    return Text('Error: ${snapshot.error}');
+                                                  } else {
+                                                    // If the data is available, display the total balance
+                                                    return Text(
+                                                        '${snapshot.data}',
+                                                        style: TextStyle(
+                                                            fontSize: 40,
+                                                            fontWeight:
+                                                            FontWeight.bold,
+                                                            color: brightness ==
+                                                                Brightness.light
+                                                                ? AppColor
+                                                                .primaryColor
+                                                                : Colors.white));
+                                                  }
+                                                },),
+
                                               Spacer(),
                                               SizedBox(
                                                 height: 25,
@@ -619,7 +677,7 @@ class _HomePageState extends State<HomePage> {
 
   Route _toPayPage() {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, anotherAnimation) => PayPage(),
+      pageBuilder: (context, animation, anotherAnimation) => MonthToPay(),
       transitionDuration: Duration(milliseconds: 1000),
       reverseTransitionDuration: Duration(milliseconds: 200),
       transitionsBuilder: (context, animation, anotherAnimation, child) {
@@ -632,7 +690,7 @@ class _HomePageState extends State<HomePage> {
             position: Tween(begin: Offset(0.0, 1.0), end: Offset(0.0, 0.0))
                 .animate(animation),
             textDirection: TextDirection.rtl,
-            child: PayPage());
+            child: MonthToPay());
       },
     );
   }

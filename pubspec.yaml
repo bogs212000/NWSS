@@ -55,6 +55,10 @@ dependencies:
   avatars: ^3.0.2
   animations: ^2.0.8
   flutter_staggered_animations: ^1.1.1
+  screenshot: ^2.1.0
+  cached_network_image: ^3.2.3
+  easy_image_viewer: ^1.4.0
+  paymongo_sdk: ^1.6.1
 
 dev_dependencies:
   flutter_test:

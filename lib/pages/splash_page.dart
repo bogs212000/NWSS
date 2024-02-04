@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nwss/await/fetch.dart';
 import 'dart:async'; // Import Dart's async library for Future.delayed
 
 import 'auth/auth.wrapper.dart';
@@ -11,6 +12,7 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+
   @override
   void initState() {
     super.initState();

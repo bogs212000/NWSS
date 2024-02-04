@@ -94,7 +94,7 @@ class _BillsPageState extends State<BillsPage> {
                 stream: FirebaseFirestore.instance
                     .collection("Accounts")
                     .doc(account_ID)
-                    .collection('bills')
+                    .collection('bills').doc("2023").collection("month").where("paid?", isEqualTo: true)
                     .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -136,95 +136,61 @@ class _BillsPageState extends State<BillsPage> {
                     physics: snapshot.data!.size <= 4
                         ? NeverScrollableScrollPhysics()
                         : BouncingScrollPhysics(),
-                    padding: EdgeInsets.only(top: 0),
-                    children:
-                        snapshot.data!.docs.map((DocumentSnapshot document) {
+                    padding: EdgeInsets.only(top: 10),
+                    children: snapshot.data!.docs.map((DocumentSnapshot document) {
                       Map<String, dynamic> data =
-                          document.data()! as Map<String, dynamic>;
+                      document.data()! as Map<String, dynamic>;
                       return Padding(
-                        padding: const EdgeInsets.only(
-                            left: 5, right: 5, bottom: 10),
+                        padding:
+                        const EdgeInsets.only(left: 5, right: 5, bottom: 10),
                         child: Card(
                           shadowColor: Color.fromARGB(255, 34, 34, 34),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Container(
-                            padding: EdgeInsets.all(10),
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      'Narra Water Supply System',
-                                      maxLines: 1,
-                                      softWrap: false,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w400),
-                                    ),
-                                    Spacer(),
-                                    Text(
-                                      data['date'].toString(),
-                                      maxLines: 1,
-                                      softWrap: false,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w200),
-                                    ),
-                                  ],
-                                ),
-                                Divider(),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween, // Aligns children to the start and end of the row
-                                  children: [
-                                    Flexible(
-                                      child: Text(
-                                        data['mode'],
+                          child: GestureDetector( onTap: () {
+                            setState(() {
+                              bills = data['bills'];
+                            });
+
+                          },
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        data['month'].toString(),
                                         maxLines: 1,
                                         softWrap: false,
                                         overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                        style: const TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w400),
                                       ),
-                                    ),
-                                    Flexible(
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.end, // Aligns children to the end of the row
-                                        children: [
-                                          Text(
-                                            'Amount: ',
-                                            maxLines: 3,
-                                            softWrap: false,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w200,
-                                            ),
-                                          ),
-                                          Text(
-                                            data['amount'].toString(),
-                                            maxLines: 3,
-                                            softWrap: false,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ],
+                                      Spacer(),
+                                      Image.asset(
+                                        'assets/icons8-peso-100.png',
+                                        scale: 4,
+                                        color:  Colors.blue,
                                       ),
-                                    ),
-                                  ],
-                                ),
-
-                              ],
+                                      Text(
+                                        data['bills'].toString(),
+                                        maxLines: 1,
+                                        softWrap: false,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),

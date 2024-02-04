@@ -265,7 +265,7 @@ class _LoginPageState extends State<LoginPage>
                               Navigator.of(context).push(_toHowToApply());
                             },
                             child: Text(
-                              "How do I apply to have a water line installed?",
+                              "How do I apply?",
                               style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w300,

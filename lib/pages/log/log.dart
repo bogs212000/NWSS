@@ -1,11 +1,15 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:nwss/constants/app_colors.dart';
 import 'package:nwss/constants/const.dart';
+import 'package:easy_image_viewer/easy_image_viewer.dart';
+
+import 'image.viewer.dart';
 
 class LogPage extends StatefulWidget {
   const LogPage({super.key});
@@ -20,7 +24,6 @@ class _LogPageState extends State<LogPage> {
     Brightness brightness = MediaQuery.of(context).platformBrightness;
     return Scaffold(
       body: Container(
-
         height: double.infinity,
         width: double.infinity,
         child: Column(
@@ -89,13 +92,13 @@ class _LogPageState extends State<LogPage> {
               ),
             ),
             SizedBox(height: 10),
-            SizedBox(
-              height: 400,
+            Expanded(
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection("user")
                     .doc(email)
                     .collection('history')
+                    .orderBy('createdAt', descending: true)
                     .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -142,6 +145,7 @@ class _LogPageState extends State<LogPage> {
                         snapshot.data!.docs.map((DocumentSnapshot document) {
                       Map<String, dynamic> data =
                           document.data()! as Map<String, dynamic>;
+                      final String imageUrl = data["ReceiptUrl"];
                       return Padding(
                         padding: const EdgeInsets.only(
                             left: 5, right: 5, bottom: 10),
@@ -182,11 +186,13 @@ class _LogPageState extends State<LogPage> {
                                 ),
                                 Divider(),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween, // Aligns children to the start and end of the row
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  // Aligns children to the start and end of the row
                                   children: [
                                     Flexible(
                                       child: Text(
-                                        data['mode'],
+                                        data['modeOfPayment'],
                                         maxLines: 1,
                                         softWrap: false,
                                         overflow: TextOverflow.ellipsis,
@@ -197,7 +203,9 @@ class _LogPageState extends State<LogPage> {
                                     ),
                                     Flexible(
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.end, // Aligns children to the end of the row
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        // Aligns children to the end of the row
                                         children: [
                                           Text(
                                             'Amount: ',
@@ -224,7 +232,26 @@ class _LogPageState extends State<LogPage> {
                                     ),
                                   ],
                                 ),
-
+                                Row(
+                                  children: [
+                                   data["confirmed?"] == false ? Text('Verifying....'): SizedBox(),
+                                    Spacer(),
+                                    GestureDetector( onTap: (){
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return ImageDialog(imageUrl: imageUrl); // Show the image in a dialog
+                                        },
+                                      );
+                                    },
+                                      child: CachedNetworkImage( height: 50, width: 50,
+                                        imageUrl: data['ReceiptUrl'],
+                                        placeholder: (context, url) => CircularProgressIndicator(),
+                                        errorWidget: (context, url, error) => Icon(Icons.error),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
                           ),
@@ -241,6 +268,5 @@ class _LogPageState extends State<LogPage> {
     );
   }
 }
-
 
 

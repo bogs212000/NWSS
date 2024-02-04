@@ -6,6 +6,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:nwss/constants/const.dart';
+import 'package:nwss/pages/auth/auth.wrapper.dart';
 
 
 class ForgotPassPage extends StatefulWidget {
