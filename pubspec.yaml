@@ -59,6 +59,7 @@ dependencies:
   cached_network_image: ^3.2.3
   easy_image_viewer: ^1.4.0
   paymongo_sdk: ^1.6.1
+  url_launcher: ^6.1.14
 
 dev_dependencies:
   flutter_test:

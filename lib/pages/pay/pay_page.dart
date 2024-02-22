@@ -14,7 +14,7 @@ import 'package:screenshot/screenshot.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:ui' as ui;
-
+import 'package:url_launcher/url_launcher.dart';
 import '../../constants/app_colors.dart';
 import 'Paymongo.dart'; // Import the 'ui' library for Image
 
@@ -157,27 +157,34 @@ class _PayPageState extends State<PayPage> {
                                   const EdgeInsets.only(left: 10, right: 10),
                               child: ElevatedButton(
                                 onPressed: () async {
-                                  try {
-                                    final checkoutUrl = await createCheckoutSession();
-                                    print('Checkout URL: $checkoutUrl');
-                                    setState(() {
-                                      checkoutURl = checkoutUrl as String?; // Assuming checkoutURl is a variable in your class
-                                    });
-                                    if (checkoutUrl != null) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => Paymongo(),
-                                        ),
-                                      );
-                                    } else {
-                                      // Handle the case where checkoutUrl is null
-                                      print('Failed to retrieve checkout URL.');
-                                    }
-                                  } catch (e) {
-                                    // Handle any errors that occurred during the checkout process
-                                    print('Error creating checkout session: $e');
+                                  String gcashUrl = 'https://www.gcash.com/';
+                                  if (await canLaunch(gcashUrl)) {
+                                    await launch(gcashUrl);
+                                  } else {
+                                    throw 'Could not launch $gcashUrl';
                                   }
+
+                                  // try {
+                                  //   final checkoutUrl = await createCheckoutSession();
+                                  //   print('Checkout URL: $checkoutUrl');
+                                  //   setState(() {
+                                  //     checkoutURl = checkoutUrl as String?; // Assuming checkoutURl is a variable in your class
+                                  //   });
+                                  //   if (checkoutUrl != null) {
+                                  //     Navigator.push(
+                                  //       context,
+                                  //       MaterialPageRoute(
+                                  //         builder: (context) => Paymongo(),
+                                  //       ),
+                                  //     );
+                                  //   } else {
+                                  //     // Handle the case where checkoutUrl is null
+                                  //     print('Failed to retrieve checkout URL.');
+                                  //   }
+                                  // } catch (e) {
+                                  //   // Handle any errors that occurred during the checkout process
+                                  //   print('Error creating checkout session: $e');
+                                  // }
                                 },
                                 style: ElevatedButton.styleFrom(
                                   onPrimary: Colors.white,
