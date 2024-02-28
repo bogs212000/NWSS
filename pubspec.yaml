@@ -60,6 +60,8 @@ dependencies:
   easy_image_viewer: ^1.4.0
   paymongo_sdk: ^1.6.1
   url_launcher: ^6.1.14
+  external_app_launcher: ^4.0.0
+  rxdart: ^0.27.7
 
 dev_dependencies:
   flutter_test:
@@ -87,6 +89,7 @@ flutter:
   assets:
       - assets/
       - assets/lottie/
+      - assets/gcash/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

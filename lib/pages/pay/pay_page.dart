@@ -1,6 +1,9 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +57,6 @@ class _PayPageState extends State<PayPage> {
     super.dispose();
   }
 
-
   Widget build(BuildContext context) {
     Brightness brightness = MediaQuery.of(context).platformBrightness;
     return loading
@@ -71,16 +73,22 @@ class _PayPageState extends State<PayPage> {
                   color: Colors.white,
                 ),
               ),
-              actions:  [
+              actions: [
                 Padding(
                   padding: EdgeInsets.only(right: 10),
-                  child: GestureDetector(onTap: (){
-
-                  },child: Icon(Icons.help)),
+                  child: GestureDetector(onTap: () {
+                    Navigator.pushNamed(context, '/support');
+                  }, child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.support_agent),
+                      Text('Support', style: TextStyle(fontSize: 10),)
+                    ],
+                  )),
                 )
               ],
               title: Text(
-                "Pay",
+                "Pay with Gcash",
                 style: GoogleFonts.nunitoSans(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -105,110 +113,323 @@ class _PayPageState extends State<PayPage> {
               ),
             ),
             body: Container(
-                height: double.infinity,
-                width: double.infinity,
-                child: Stack(
-                  children: [
-                    Container(
-                      height: double.infinity,
-                      width: double.infinity,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Container(
-                            color: Colors.white,
-                            width: double.infinity,
-                            child: Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 10, right: 20),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        const Text(
-                                          "Bills to pay: ",
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 15),
-                                        ),
-                                        Image.asset(
-                                          'assets/icons8-peso-100.png',
-                                          scale: 4,
-                                          color: Colors.blue,
-                                        ),
-                                        Text(
-                                          bills!.toString(),
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 19),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                )),
-                          ),
-                          Container(
-                            color: Colors.white,
-                            width: double.infinity,
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 10, right: 10),
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  String gcashUrl = 'https://www.gcash.com/';
-                                  if (await canLaunch(gcashUrl)) {
-                                    await launch(gcashUrl);
-                                  } else {
-                                    throw 'Could not launch $gcashUrl';
-                                  }
-
-                                  // try {
-                                  //   final checkoutUrl = await createCheckoutSession();
-                                  //   print('Checkout URL: $checkoutUrl');
-                                  //   setState(() {
-                                  //     checkoutURl = checkoutUrl as String?; // Assuming checkoutURl is a variable in your class
-                                  //   });
-                                  //   if (checkoutUrl != null) {
-                                  //     Navigator.push(
-                                  //       context,
-                                  //       MaterialPageRoute(
-                                  //         builder: (context) => Paymongo(),
-                                  //       ),
-                                  //     );
-                                  //   } else {
-                                  //     // Handle the case where checkoutUrl is null
-                                  //     print('Failed to retrieve checkout URL.');
-                                  //   }
-                                  // } catch (e) {
-                                  //   // Handle any errors that occurred during the checkout process
-                                  //   print('Error creating checkout session: $e');
-                                  // }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  onPrimary: Colors.white,
-                                  primary: Colors
-                                      .blue, // Change this to your desired color
-                                  onSurface: Colors.grey,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
+              height: double.infinity,
+              width: double.infinity,
+              child: Stack(
+                children: [
+                  Container(
+                    height: double.infinity,
+                    width: double.infinity,
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 20, right: 20, bottom: 140),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 80),
+                            //step1
+                            Row(
+                              children: [
+                                Text(
+                                  'Step 1:',
+                                  style: TextStyle(fontWeight: FontWeight.w800),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 3),
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    'Open the GCash app on your mobile device',
+                                    overflow: TextOverflow.fade,
                                   ),
                                 ),
-                                child: const Text(
-                                  "Pay",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15),
+                              ],
+                            ),
+                            SizedBox(height: 3),
+                            Container(
+                              color: Colors.white,
+                              width: double.infinity,
+                              height: 300,
+                              child: Image.asset('assets/gcash/1.png'),
+                            ),
+                            SizedBox(height: 10),
+                            //open gcash button
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    String gcashUrl = 'https://www.gcash.com/';
+                                    if (await canLaunch(gcashUrl)) {
+                                      await launch(gcashUrl);
+                                    } else {
+                                      throw 'Could not launch $gcashUrl';
+                                    }
+                                    // try {
+                                    //   final checkoutUrl = await createCheckoutSession();
+                                    //   print('Checkout URL: $checkoutUrl');
+                                    //   setState(() {
+                                    //     checkoutURl = checkoutUrl as String?; // Assuming checkoutURl is a variable in your class
+                                    //   });
+                                    //   if (checkoutUrl != null) {
+                                    //     Navigator.push(
+                                    //       context,
+                                    //       MaterialPageRoute(
+                                    //         builder: (context) => Paymongo(),
+                                    //       ),
+                                    //     );
+                                    //   } else {
+                                    //     // Handle the case where checkoutUrl is null
+                                    //     print('Failed to retrieve checkout URL.');
+                                    //   }
+                                    // } catch (e) {
+                                    //   // Handle any errors that occurred during the checkout process
+                                    //   print('Error creating checkout session: $e');
+                                    // }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    onPrimary: Colors.white,
+                                    primary: Colors
+                                        .blue, // Change this to your desired color
+                                    onSurface: Colors.grey,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    "Open Gcash App",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold, fontSize: 15),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+
+                            //step 2
+                            Row(
+                              children: [
+                                Text(
+                                  'Step 2:',
+                                  style: TextStyle(fontWeight: FontWeight.w800),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 3),
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    "If you're not already logged in, log in to your GCash account using your mobile number and PIN.",
+                                    overflow: TextOverflow.fade,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 3),
+                            Container(
+                              color: Colors.white,
+                              width: double.infinity,
+                              height: 300,
+                              child: Image.asset('assets/gcash/2.png'),
+                            ),
+                            SizedBox(height: 10),
+                            //step 3
+                            Row(
+                              children: [
+                                Text(
+                                  'Step 3:',
+                                  style: TextStyle(fontWeight: FontWeight.w800),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 3),
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    "On your GCash homepage, tap Send",
+                                    overflow: TextOverflow.fade,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 3),
+                            Container(
+                              color: Colors.white,
+                              width: double.infinity,
+                              height: 300,
+                              child: Image.asset('assets/gcash/3.png'),
+                            ),
+                            SizedBox(height: 10),
+                            //step4
+                            Row(
+                              children: [
+                                Text(
+                                  'Step 4:',
+                                  style: TextStyle(fontWeight: FontWeight.w800),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 3),
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    "Select Express Send",
+                                    overflow: TextOverflow.fade,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 3),
+                            Container(
+                              color: Colors.white,
+                              width: double.infinity,
+                              height: 300,
+                              child: Image.asset('assets/gcash/4.png'),
+                            ),
+                            SizedBox(height: 10),
+                            //step5
+                            Row(
+                              children: [
+                                Text(
+                                  'Step 5:',
+                                  style: TextStyle(fontWeight: FontWeight.w800),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 3),
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    "Enter the Gcash number of NWSS and the amount of bills to pay. Input the month you want to pay the bill. Tap Next.",
+                                    overflow: TextOverflow.fade,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 3),
+                            Container(
+                              color: Colors.white,
+                              width: double.infinity,
+                              height: 300,
+                              child: Image.asset('assets/gcash/5.png'),
+                            ),
+                            SizedBox(height: 10),
+                            //step6
+                            Row(
+                              children: [
+                                Text(
+                                  'Step 6:',
+                                  style: TextStyle(fontWeight: FontWeight.w800),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 3),
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    "Check the checkbox to confirm the details and tap Send.",
+                                    overflow: TextOverflow.fade,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 3),
+                            Container(
+                              color: Colors.white,
+                              width: double.infinity,
+                              height: 300,
+                              child: Image.asset('assets/gcash/6.png'),
+                            ),
+                            SizedBox(height: 20),
+                            //step7
+                            Row(
+                              children: [
+                                Text(
+                                  'Step 7:',
+                                  style: TextStyle(fontWeight: FontWeight.w800),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 3),
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    "Download or take a clear photo of the receipt and go back to the app. Tap Next below to proceed with the process.",
+                                    overflow: TextOverflow.fade,
+                                  ),
+                                ),
+                              ],
+                            ),
+
+
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: double.infinity,
+                    width: double.infinity,
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(20),
+                          color: Colors.orangeAccent,
+                          width: double.infinity,
+                          child: Row(
+                            children: [
+                              Icon(Icons.warning_amber_rounded, color: Colors.red,),
+                              SizedBox(width: 5),
+                              Text('Please follow the instructions carefully.')
+                            ],
+                          ),
+                        ),
+                        Spacer(),
+                        Container(
+                          padding: EdgeInsets.all(20),
+                          width: double.infinity,
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 45,
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    Navigator.pushNamed(context, '/upload_receipt');
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    onPrimary: Colors.white,
+                                    primary: Colors
+                                        .blue, // Change this to your desired color
+                                    onSurface: Colors.grey,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    "Next",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold, fontSize: 15),
+                                  ),
                                 ),
                               ),
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                )),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           );
   }
 
@@ -254,7 +475,8 @@ class _PayPageState extends State<PayPage> {
                         return Center();
                       } else {
                         return WebView(
-                          initialUrl: 'https://checkout.paymongo.com/cs_u6abKy2NDKE1dJLH51iaKgWW_client_F4U2DEB1Y4puj2VvpAf3THrN#cGtfdGVzdF8xRGZ0QlFiY3JzUFU4OVhOQTFvWDlYeHU=',
+                          initialUrl:
+                              'https://checkout.paymongo.com/cs_u6abKy2NDKE1dJLH51iaKgWW_client_F4U2DEB1Y4puj2VvpAf3THrN#cGtfdGVzdF8xRGZ0QlFiY3JzUFU4OVhOQTFvWDlYeHU=',
                           // Set the URL you want to display
                           javascriptMode: JavascriptMode.unrestricted,
                           onWebResourceError:

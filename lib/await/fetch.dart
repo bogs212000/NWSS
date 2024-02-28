@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nwss/constants/const.dart';
-import 'package:paymongo_sdk/paymongo_sdk.dart';
+
+double? totalAmountBalance;
 
 Future<void> calculateTotalAmount(Function(void Function()) setState) async {
   double totalAmount = 0;
@@ -25,15 +26,14 @@ Future<void> calculateTotalAmount(Function(void Function()) setState) async {
       // Get the 'amount' field from the document data and add it to the total
       totalAmount += (document.data()['bills'] as num).toDouble();
     }
+
   }
 
   // Print the total amount
   print('Total amount: $totalAmount');
 
-  // Update the state using the provided setState function
-  setState(() {
-    totalBalance =
-        totalAmount; // Assuming totalBalance is a variable in the widget's state
+  setState((){
+    totalAmountBalance = totalAmount;
   });
 }
 

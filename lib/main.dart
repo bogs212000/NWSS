@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:nwss/navigator.dart';
 import 'package:nwss/pages/auth/auth.wrapper.dart';
 import 'package:nwss/pages/auth/login.dart';
+import 'package:nwss/pages/pay/upload.dart';
 import 'package:nwss/pages/splash_page.dart';
+import 'package:nwss/pages/support/support.page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,12 +32,14 @@ class MyApp extends StatelessWidget {
             title: 'NWSS',
             routes: {
               '/login': (context) => AuthWrapper(),
+              '/support': (context) => SupportPage(),
+              '/upload_receipt': (context) => UploadReceipt(),
               // Add other routes as needed
             },
             theme: ThemeData(primarySwatch: Colors.blue, backgroundColor: Colors.green,),
             darkTheme: ThemeData.dark(),
             themeMode: ThemeMode.system,
-            home: const SplashPage(),
+            home: AuthWrapper(),
           );
         });
   }

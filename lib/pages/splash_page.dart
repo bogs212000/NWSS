@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:nwss/await/fetch.dart';
+import 'package:rxdart/rxdart.dart';
 import 'dart:async'; // Import Dart's async library for Future.delayed
 
+import '../constants/const.dart';
 import 'auth/auth.wrapper.dart';
 
 class SplashPage extends StatefulWidget {
@@ -16,7 +19,6 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    // Delay for 2 seconds and then navigate to AuthWrapper
     Future.delayed(const Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
@@ -24,6 +26,30 @@ class _SplashPageState extends State<SplashPage> {
       );
     });
   }
+
+  BehaviorSubject<double> getTotalBalanceStream() {
+    final subject = BehaviorSubject<double>.seeded(0.0); // Initial value
+    FirebaseFirestore.instance
+        .collection("Accounts")
+        .doc(account_ID)
+        .collection("bills")
+        .doc("2023")
+        .collection("month")
+        .snapshots()
+        .listen((querySnapshot) {
+      double totalAmount = 0;
+      for (QueryDocumentSnapshot<Map<String, dynamic>> document
+      in querySnapshot.docs) {
+        if (document.data().containsKey('bills')) {
+          totalAmount += (document.data()['bills'] as num).toDouble();
+        }
+      }
+      subject.add(totalAmount);
+    });
+    return subject;
+  }
+
+
 
   @override
   Widget build(BuildContext context) {

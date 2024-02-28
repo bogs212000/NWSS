@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:rxdart/rxdart.dart';
 
 String? msg;
 bool? loadingLogin;
@@ -26,3 +27,4 @@ String formattedTime = DateFormat('h:mm a').format(now);
 String? dayNight = DateFormat('h').format(now);
 String? checkoutURl;
 String? gcashPaymentMethodId;
+late BehaviorSubject<double> totalBalanceStream;
