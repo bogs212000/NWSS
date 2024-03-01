@@ -169,21 +169,27 @@ class _UploadReceiptState extends State<UploadReceipt> {
                               width: double.infinity,
                               child: ElevatedButton(
                                 onPressed: () async {
-                                  String paymentId = Uuid().v4();
-                                  try {
-                                    await FirebaseFirestore.instance.collection('clientsPayment').doc('paymentId').set({
-                                     'paymentId': paymentId,
-                                     'createdAt': DateTime.now(),
-                                      'accountId': account_ID,
-                                      'name': fullname!,
-                                      'amount': bills!,
-                                      'month': month,
-                                      'confirmed?': false,
-                                     'gcashRefNo': refNoController.text,
-                                    });
-                                  } catch (e) {
-                                    return print(e);
+                                  if (refNoController.text.isEmpty){
+
+                                  } else {
+                                    try {
+                                      String paymentId = Uuid().v4();
+                                      await FirebaseFirestore.instance.collection('clientsPayment').doc('paymentId').set({
+                                        'paymentId': paymentId,
+                                        'createdAt': DateTime.now(),
+                                        'accountId': account_ID,
+                                        'name': fullname!,
+                                        'amount': bills!,
+                                        'month': month,
+                                        'confirmed?': false,
+                                        'gcashRefNo': refNoController.text,
+                                      });
+                                      print('submitted');
+                                    } catch (e) {
+                                      return print(e);
+                                    }
                                   }
+
                                 },
                                 style: ElevatedButton.styleFrom(
                                   onPrimary: Colors.white,

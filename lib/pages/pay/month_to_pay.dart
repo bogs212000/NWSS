@@ -6,8 +6,6 @@ import 'package:nwss/constants/app_colors.dart';
 import 'package:nwss/constants/const.dart';
 import 'package:nwss/pages/pay/pay_page.dart';
 
-
-
 class MonthToPay extends StatefulWidget {
   const MonthToPay({super.key});
 
@@ -16,8 +14,6 @@ class MonthToPay extends StatefulWidget {
 }
 
 class _MonthToPayState extends State<MonthToPay> {
-
-
   Widget build(BuildContext context) {
     Brightness brightness = MediaQuery.of(context).platformBrightness;
     return Scaffold(
@@ -68,13 +64,8 @@ class _MonthToPayState extends State<MonthToPay> {
         width: double.infinity,
         child: StreamBuilder(
           stream: FirebaseFirestore.instance
-              .collection("Accounts")
-              .doc(account_ID)
-              .collection('bills')
-              .doc("2023")
-              .collection("month")
-              .where("paid?", isEqualTo: false)
-              .orderBy('createdAt', descending: true)
+              .collection('biils')
+              .where('clientId', isEqualTo: account_ID)
               .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -131,7 +122,7 @@ class _MonthToPayState extends State<MonthToPay> {
                     child: GestureDetector(
                       onTap: () {
                         setState(() {
-                          bills = data['bills'].toDouble();
+                          bills = data['billAmount'].toDouble();
                           month = data['month'].toString();
                         });
                         Navigator.of(context).push(_toPay());
@@ -161,7 +152,7 @@ class _MonthToPayState extends State<MonthToPay> {
                                   color: Colors.blue,
                                 ),
                                 Text(
-                                  data['bills'].toString(),
+                                  data['billAmount'].toString(),
                                   maxLines: 1,
                                   softWrap: false,
                                   overflow: TextOverflow.ellipsis,
