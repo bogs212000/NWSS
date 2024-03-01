@@ -73,7 +73,7 @@ class _MonthToPayState extends State<MonthToPay> {
               .collection('bills')
               .doc("2023")
               .collection("month")
-              .where("paid?", isEqualTo: true)
+              .where("paid?", isEqualTo: false)
               .orderBy('createdAt', descending: true)
               .snapshots(),
           builder:
@@ -133,7 +133,6 @@ class _MonthToPayState extends State<MonthToPay> {
                         setState(() {
                           bills = data['bills'].toDouble();
                           month = data['month'].toString();
-                          fullname = data['fullname'].toString();
                         });
                         Navigator.of(context).push(_toPay());
                       },

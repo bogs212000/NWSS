@@ -1,10 +1,13 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nwss/await/loading.dart';
+import 'package:nwss/constants/const.dart';
+import 'package:uuid/uuid.dart';
 
 class UploadReceipt extends StatefulWidget {
   const UploadReceipt({super.key});
@@ -90,18 +93,20 @@ class _UploadReceiptState extends State<UploadReceipt> {
                   height: double.infinity,
                   child: SingleChildScrollView(
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 100, left: 20, right: 20, bottom: 30),
+                      padding: const EdgeInsets.only(
+                          top: 100, left: 20, right: 20, bottom: 30),
                       child: Column(
                         children: [
-                          Text('Please make sure the image of the receipt is clear and the reference number is visible.'),
-                        SizedBox(height: 20),
-                        Container(),
-                        SizedBox(height: 20),
+                          Text(
+                              'Hi Mr./Mrs. ${fullname!}, Please make sure you paid the exact amount of ₱${bills!.toString()} for the month of ${month!}'),
+                          SizedBox(height: 20),
+                          Container(),
+                          SizedBox(height: 20),
                           SizedBox(
                             height: 60,
                             child: TextField(
                               controller: refNoController,
-                              keyboardType: TextInputType.text,
+                              keyboardType: TextInputType.number,
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
                               decoration: InputDecoration(
@@ -119,13 +124,15 @@ class _UploadReceiptState extends State<UploadReceipt> {
                                 ),
                                 hintText: 'Ref no.',
                                 prefixIcon: Icon(
-                                  Icons.numbers, color: Colors.grey,
+                                  Icons.numbers,
+                                  color: Colors.grey,
                                 ),
                               ),
                             ),
                           ),
                           SizedBox(height: 20),
-                          Text('Verifying your payment will take 10 to 15 minutes. If something went wrong, please message the support team.'),
+                          Text(
+                              'Verifying your payment will take 10 to 15 minutes. If something went wrong, please message the support team.'),
                         ],
                       ),
                     ),
@@ -142,7 +149,10 @@ class _UploadReceiptState extends State<UploadReceipt> {
                         width: double.infinity,
                         child: Row(
                           children: [
-                            Icon(Icons.warning_amber_rounded, color: Colors.red,),
+                            Icon(
+                              Icons.warning_amber_rounded,
+                              color: Colors.red,
+                            ),
                             SizedBox(width: 5),
                             Text('Please follow the instructions carefully.')
                           ],
@@ -159,7 +169,21 @@ class _UploadReceiptState extends State<UploadReceipt> {
                               width: double.infinity,
                               child: ElevatedButton(
                                 onPressed: () async {
-                                  Navigator.pushNamed(context, '/upload_receipt');
+                                  String paymentId = Uuid().v4();
+                                  try {
+                                    await FirebaseFirestore.instance.collection('clientsPayment').doc('paymentId').set({
+                                     'paymentId': paymentId,
+                                     'createdAt': DateTime.now(),
+                                      'accountId': account_ID,
+                                      'name': fullname!,
+                                      'amount': bills!,
+                                      'month': month,
+                                      'confirmed?': false,
+                                     'gcashRefNo': refNoController.text,
+                                    });
+                                  } catch (e) {
+                                    return print(e);
+                                  }
                                 },
                                 style: ElevatedButton.styleFrom(
                                   onPrimary: Colors.white,
@@ -173,7 +197,8 @@ class _UploadReceiptState extends State<UploadReceipt> {
                                 child: const Text(
                                   "Submit",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold, fontSize: 15),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15),
                                 ),
                               ),
                             ),

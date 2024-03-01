@@ -16,6 +16,7 @@ Future<void> calculateTotalAmount(Function(void Function()) setState) async {
       .collection("bills")
       .doc("2023")
       .collection("month")
+      .where('paid?', isEqualTo: false)
       .get();
 
   // Iterate through the documents and sum up the amounts
@@ -26,13 +27,12 @@ Future<void> calculateTotalAmount(Function(void Function()) setState) async {
       // Get the 'amount' field from the document data and add it to the total
       totalAmount += (document.data()['bills'] as num).toDouble();
     }
-
   }
 
   // Print the total amount
   print('Total amount: $totalAmount');
 
-  setState((){
+  setState(() {
     totalAmountBalance = totalAmount;
   });
 }
@@ -225,7 +225,8 @@ Future<String> createCheckoutSession() async {
 }
 
 Future<String> createPaymentSession() async {
-  final String apiKey = 'sk_test_G81qsqBmSjH139G4WLo41biH'; // Replace with your actual secret API key
+  final String apiKey =
+      'sk_test_G81qsqBmSjH139G4WLo41biH'; // Replace with your actual secret API key
   final String apiUrl = 'https://api.paymongo.com/v1/payment_intents';
 
   final String encodedApiKey = base64.encode(utf8.encode('$apiKey:'));
@@ -240,13 +241,16 @@ Future<String> createPaymentSession() async {
       'attributes': {
         'amount': (bills! * 100).floor(),
         // Convert to integer representing cents
-        'currency': 'PHP', // Specify the currency code (e.g., PHP for Philippine Peso)
+        'currency': 'PHP',
+        // Specify the currency code (e.g., PHP for Philippine Peso)
         'payment_method_allowed': ['gcash'],
         // Specify allowed payment method
         'payment_method_types': ['gcash'],
         // Specify allowed payment method types
-        'description': 'Payment for Bills', // Add a description for the payment
-        'statement_descriptor': 'Bills Payment', // Add a statement descriptor for the payment
+        'description': 'Payment for Bills',
+        // Add a description for the payment
+        'statement_descriptor': 'Bills Payment',
+        // Add a statement descriptor for the payment
         // Add other attributes as needed
       }
     }
@@ -266,10 +270,6 @@ Future<String> createPaymentSession() async {
         'Failed to create payment session. Status code: ${response.statusCode}. Response body: ${response.body}');
   }
 }
-
-
-
-
 
 Future<void> initiatePayment() async {
   try {

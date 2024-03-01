@@ -62,6 +62,7 @@ dependencies:
   url_launcher: ^6.1.14
   external_app_launcher: ^4.0.0
   rxdart: ^0.27.7
+  uuid: ^4.2.2
 
 dev_dependencies:
   flutter_test:
