@@ -36,11 +36,25 @@ class _PayPageState extends State<PayPage> {
   final ref = FirebaseStorage.instance.ref().child('PaymentReceipt/$email');
   ScreenshotController screenshotController = ScreenshotController();
   bool loading = false;
+  String? dateNow;
+  String? dateDue;
 
   @override
   void initState() {
     super.initState();
     amount.addListener(_validateAmount);
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('yyyy-MM-dd').format(now);
+    DateTime? due = dueDate;
+    DateTime? tomorrow = due?.add(Duration(days: 1));
+    String formattedDateDue = DateFormat('yyyy-MM-dd').format(tomorrow!);
+    print('Due date ${formattedDateDue}'); // Output: Tomorrow's date in yyyy-MM-dd format
+    print('Date now ${formattedDate}'); // Output: Tomorrow's date in yyyy-MM-dd format
+    setState(() {
+      dateNow = formattedDate;
+      dateDue = formattedDateDue;
+    });
+
   }
 
   void _validateAmount() {
@@ -312,6 +326,47 @@ class _PayPageState extends State<PayPage> {
                                 ),
                               ],
                             ),
+                            SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    "Due date: ${dueDateFormated}",
+                                    overflow: TextOverflow.fade,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    "Bills to pay: ₱${bills}",
+                                    overflow: TextOverflow.fade,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    "Month to pay: ${month}",
+                                    overflow: TextOverflow.fade,
+                                  ),
+                                ),
+                              ],
+                            ),
+                           dateNow == dateDue ? Row(
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    "Penalty: ₱${penalty}",
+                                    overflow: TextOverflow.fade,
+                                  ),
+                                ),
+                              ],
+                            ) : SizedBox(),
                             SizedBox(height: 3),
                             Container(
                               color: Colors.white,

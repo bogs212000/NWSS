@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:nwss/constants/app_colors.dart';
+import 'package:intl/intl.dart';
 import 'package:nwss/constants/const.dart';
 import 'package:nwss/pages/pay/pay_page.dart';
 
@@ -112,6 +112,9 @@ class _MonthToPayState extends State<MonthToPay> {
               children: snapshot.data!.docs.map((DocumentSnapshot document) {
                 Map<String, dynamic> data =
                     document.data()! as Map<String, dynamic>;
+                var due =
+                DateFormat('yyyy-MM-dd').format(data['dueDate'].toDate());
+                var afd = data['billAmount'] + data['dueDateFee'];
                 return Padding(
                   padding: const EdgeInsets.only(left: 5, right: 5, bottom: 10),
                   child: Card(
@@ -124,6 +127,11 @@ class _MonthToPayState extends State<MonthToPay> {
                         setState(() {
                           bills = data['billAmount'].toDouble();
                           month = data['month'].toString();
+                          Timestamp timestamp = data['dueDate'];
+                          dueDate = timestamp.toDate();
+                          dueDateFormated = due;
+                          amountAfterDue = afd;
+                          penalty = data['dueDateFee'];
                         });
                         Navigator.of(context).push(_toPay());
                       },
@@ -160,6 +168,28 @@ class _MonthToPayState extends State<MonthToPay> {
                                       fontSize: 18,
                                       fontWeight: FontWeight.w400),
                                 ),
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                            Row(
+                              children: [
+                                Text('Due date:'),
+                                Spacer(),
+                                Text('${due}'),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text('Penalty:'),
+                                Spacer(),
+                                Text('₱${data['dueDateFee']}'),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text('Amount after due:'),
+                                Spacer(),
+                                Text('₱${afd}'),
                               ],
                             ),
                           ],

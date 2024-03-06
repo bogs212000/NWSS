@@ -143,8 +143,7 @@ class _PriceRateState extends State<PriceRate> {
                 ))
               ],
             ),
-            SizedBox(
-              height: releaseMode == true ? 700 : 400,
+            Expanded(
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection("price")
